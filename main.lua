@@ -1,3 +1,39 @@
+function get_dist (o1, o2)
+    return math.sqrt ((o2.x - o1.x) ^ 2 + (o2.y - o1.y) ^ 2)
+end
+
+
+function collide (o1, o2)
+    return (get_dist (o1, o2) < o1.rad + o2.rad)
+end
+
+
+function fire ()
+    local shot = {}
+
+    shot.x = rocket.x + rocket_rad * math.cos (rocket.angle)
+    shot.y = rocket.y + rocket_rad * math.sin (rocket.angle)
+    shot.velocity = {}
+    shot.velocity.angle = rocket.angle
+    shot.velocity.speed = shot_speed
+    shot.rad = shot_rad
+
+    shots[shot] = true
+end
+
+function generate_enemy ()
+    local enemy = {}
+    
+    enemy.x = win_width;
+    enemy.y = math.random () * win_height
+
+    enemy.velocity = {}
+    enemy.velocity.speed = 100
+    enemy.velocity.angle = math.random () * math.pi * 2
+    enemy.rad = enemy_rad
+
+    enemies[enemy] = true;
+end
 
 function love.load ()
     win_width = love.window.getWidth ()
@@ -6,6 +42,9 @@ function love.load ()
     rocket = {}
     rocket_rad = 25
     spin_rps = 6
+
+    shot_speed = 1000
+    shot_rad = 4
 
     rocket.x = win_width / 2
     rocket.y = win_height / 2
@@ -17,8 +56,25 @@ function love.load ()
 
     rocket.accel = 500
     rocket.max_speed = 500
+
+    enemies = {}
+    enemy_rad = 15
+    generate_enemy ()
+    generate_enemy ()
+    generate_enemy ()
+
+    shots = {}
 end
 
+
+function update_pos (object, dt)
+    object.x = object.x + dt * object.velocity.speed * math.cos (object.velocity.angle)
+    object.y = object.y + dt * object.velocity.speed * math.sin (object.velocity.angle)
+end
+
+function update_rocket_pos (dt)
+    update_pos (rocket, dt)
+end
 
 function accelerate_rocket (dt)
     local dx, dy
@@ -39,33 +95,58 @@ function accelerate_rocket (dt)
 end
 
 
-function love.update (dt)
-    rocket.x = rocket.x + dt * rocket.velocity.speed * math.cos (rocket.velocity.angle)
-    rocket.y = rocket.y + dt * rocket.velocity.speed * math.sin (rocket.velocity.angle)
-
-    if (rocket.x < 0) then
-        rocket.x = rocket.x + win_width
-    elseif (rocket.x > win_width) then
-        rocket.x = rocket.x - win_width
+function love.keypressed (key)
+    print (key)
+    if (key == " ") then
+        fire ()
     end
+end
 
-    if (rocket.y < 0) then
-        rocket.y = rocket.y + win_height
-    elseif (rocket.y > win_height) then
-        rocket.y = rocket.y - win_height
-    end
 
-    if (love.keyboard.isDown ("a")) then
+function handle_inputs (dt)
+    if (love.keyboard.isDown ("a") or love.keyboard.isDown ("left")) then
         rocket.angle = rocket.angle - spin_rps * dt
-    elseif (love.keyboard.isDown ("d")) then
+    elseif (love.keyboard.isDown ("d") or love.keyboard.isDown ("right")) then
         rocket.angle = rocket.angle + spin_rps * dt
     end
 
-    if (love.keyboard.isDown ("s")) then
+    if (love.keyboard.isDown ("s") or love.keyboard.isDown ("down")) then
         accelerate_rocket (-dt)
-    elseif (love.keyboard.isDown ("w")) then
+    elseif (love.keyboard.isDown ("w") or love.keyboard.isDown ("up")) then
         accelerate_rocket (dt)
     end
+end
+
+
+function wrap_edges (object)
+    if (object.x < 0) then
+        object.x = object.x + win_width
+    elseif (object.x > win_width) then
+        object.x = object.x - win_width
+    end
+
+    if (object.y < 0) then
+        object.y = object.y + win_height
+    elseif (object.y > win_height) then
+        object.y = object.y - win_height
+    end
+end
+
+
+function check_collisions ()
+    for shot in pairs(shots) do
+        for enemy in pairs(enemies) do
+            if (collide (shot, enemy)) then
+                enemies[enemy] = nil
+                shots[shot] = nil
+                break
+            end
+        end
+    end
+end
+
+function check_limits ()
+    wrap_edges (rocket)
 
     if (rocket.velocity.speed < 0) then
         rocket.velocity.speed = 0
@@ -74,9 +155,41 @@ function love.update (dt)
     end
 end
 
-function love.draw ()
+
+function update_enemies (dt)
+    for enemy in pairs(enemies) do
+        update_pos (enemy, dt)
+        wrap_edges (enemy)
+    end
+end
+
+
+function update_shots (dt)
+    for shot in pairs(shots) do
+        update_pos (shot, dt)
+        if (shot.x < 0 or shot.x > win_width or
+                shot.y < 0 or shot.y > win_height) then
+            shots[shot] = nil
+        end
+    end
+end
+
+function love.update (dt)
+    handle_inputs (dt)
+    update_rocket_pos (dt)
+    check_limits ()
+
+    update_enemies (dt)
+    update_shots (dt)
+
+    check_collisions ()
+end
+
+
+function draw_rocket ()
     local rocket_polygon = {}
 
+    love.graphics.setColor (255, 255, 255, 255)
     rocket_polygon[1] = rocket.x + rocket_rad * math.cos (rocket.angle + 0)
     rocket_polygon[2] = rocket.y + rocket_rad * math.sin (rocket.angle + 0)
 
@@ -87,5 +200,28 @@ function love.draw ()
     rocket_polygon[6] = rocket.y + rocket_rad * math.sin (rocket.angle + math.pi * 7 / 6)
 
     love.graphics.polygon ("fill", rocket_polygon)
+end
+
+
+function draw_enemies ()
+    love.graphics.setColor (255, 150, 150, 255)
+    for enemy in pairs(enemies) do
+        love.graphics.circle ("fill", enemy.x, enemy.y, enemy_rad)
+    end
+end
+        
+
+function draw_shots ()
+    love.graphics.setColor (0, 255, 0, 255)
+    for shot in pairs(shots) do
+        love.graphics.circle ("fill", shot.x, shot.y, shot_rad)
+    end
+end
+
+
+function love.draw ()
+    draw_rocket ()
+    draw_enemies ()
+    draw_shots ()
 end
 
