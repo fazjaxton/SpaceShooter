@@ -39,6 +39,9 @@ function love.load ()
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
 
+    game_time = 0
+    enemy_time = 2
+
     rocket = {}
     rocket_rad = 25
     spin_rps = 6
@@ -51,6 +54,7 @@ function love.load ()
     rocket.velocity = {}
     rocket.velocity.angle = math.pi / 8
     rocket.velocity.speed = 0
+    rocket.rad = rocket_rad
 
     rocket.angle = rocket.velocity.angle
 
@@ -59,9 +63,6 @@ function love.load ()
 
     enemies = {}
     enemy_rad = 15
-    generate_enemy ()
-    generate_enemy ()
-    generate_enemy ()
 
     shots = {}
 end
@@ -175,6 +176,11 @@ function update_shots (dt)
 end
 
 function love.update (dt)
+    if (math.floor ((game_time + dt) / enemy_time) > math.floor (game_time / enemy_time)) then
+        generate_enemy ()
+    end
+    game_time = game_time + dt
+
     handle_inputs (dt)
     update_rocket_pos (dt)
     check_limits ()
