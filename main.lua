@@ -11,8 +11,8 @@ end
 function fire ()
     local shot = {}
 
-    shot.x = rocket.x + rocket_rad * math.cos (rocket.angle)
-    shot.y = rocket.y + rocket_rad * math.sin (rocket.angle)
+    shot.x = rocket.x + rocket.rad * math.cos (rocket.angle)
+    shot.y = rocket.y + rocket.rad * math.sin (rocket.angle)
     shot.velocity = {}
     shot.velocity.angle = rocket.angle
     shot.velocity.speed = shot_speed
@@ -190,14 +190,14 @@ function draw_rocket ()
     local rocket_polygon = {}
 
     love.graphics.setColor (255, 255, 255, 255)
-    rocket_polygon[1] = rocket.x + rocket_rad * math.cos (rocket.angle + 0)
-    rocket_polygon[2] = rocket.y + rocket_rad * math.sin (rocket.angle + 0)
+    rocket_polygon[1] = rocket.x + rocket.rad * math.cos (rocket.angle + 0)
+    rocket_polygon[2] = rocket.y + rocket.rad * math.sin (rocket.angle + 0)
 
-    rocket_polygon[3] = rocket.x + rocket_rad * math.cos (rocket.angle + math.pi * 5 / 6)
-    rocket_polygon[4] = rocket.y + rocket_rad * math.sin (rocket.angle + math.pi * 5 / 6)
+    rocket_polygon[3] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 5 / 6)
+    rocket_polygon[4] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 5 / 6)
 
-    rocket_polygon[5] = rocket.x + rocket_rad * math.cos (rocket.angle + math.pi * 7 / 6)
-    rocket_polygon[6] = rocket.y + rocket_rad * math.sin (rocket.angle + math.pi * 7 / 6)
+    rocket_polygon[5] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 7 / 6)
+    rocket_polygon[6] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 7 / 6)
 
     love.graphics.polygon ("fill", rocket_polygon)
 end
@@ -206,7 +206,7 @@ end
 function draw_enemies ()
     love.graphics.setColor (255, 150, 150, 255)
     for enemy in pairs(enemies) do
-        love.graphics.circle ("fill", enemy.x, enemy.y, enemy_rad)
+        love.graphics.circle ("fill", enemy.x, enemy.y, enemy.rad)
     end
 end
         
@@ -214,7 +214,7 @@ end
 function draw_shots ()
     love.graphics.setColor (0, 255, 0, 255)
     for shot in pairs(shots) do
-        love.graphics.circle ("fill", shot.x, shot.y, shot_rad)
+        love.graphics.circle ("fill", shot.x, shot.y, shot.rad)
     end
 end
 
