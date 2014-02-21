@@ -11,6 +11,11 @@ end
 function fire ()
     local shot = {}
 
+    -- Don't fire faster than max rate
+    if (game_time < fire_time + 1 / fire_rate) then
+        return
+    end
+
     shot.x = rocket.x + rocket.rad * math.cos (rocket.angle)
     shot.y = rocket.y + rocket.rad * math.sin (rocket.angle)
     shot.velocity = {}
@@ -19,6 +24,7 @@ function fire ()
     shot.rad = shot_rad
 
     shots[shot] = true
+    fire_time = game_time
 end
 
 function generate_enemy ()
@@ -41,6 +47,9 @@ function love.load ()
 
     game_time = 0
     enemy_time = 2
+    fire_rate = 5
+
+    fire_time = 0
 
     rocket = {}
     rocket_rad = 25
@@ -115,6 +124,10 @@ function handle_inputs (dt)
         accelerate_rocket (-dt)
     elseif (love.keyboard.isDown ("w") or love.keyboard.isDown ("up")) then
         accelerate_rocket (dt)
+    end
+
+    if (love.keyboard.isDown (" ")) then
+        fire ()
     end
 end
 
@@ -215,7 +228,7 @@ function draw_enemies ()
         love.graphics.circle ("fill", enemy.x, enemy.y, enemy.rad)
     end
 end
-        
+
 
 function draw_shots ()
     love.graphics.setColor (0, 255, 0, 255)
