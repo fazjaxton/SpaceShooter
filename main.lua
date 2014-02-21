@@ -9,15 +9,39 @@ function love.load ()
 
     rocket.x = win_width / 2
     rocket.y = win_height / 2
-    rocket.angle = math.pi / 8
-    rocket.speed = 0
+    rocket.velocity = {}
+    rocket.velocity.angle = math.pi / 8
+    rocket.velocity.speed = 0
+
+    rocket.angle = rocket.velocity.angle
+
     rocket.accel = 500
     rocket.max_speed = 500
 end
 
+
+function accelerate_rocket (dt)
+    local dx, dy
+    local vel_x, vel_y
+    local dv_x, dv_y
+
+    vel_x = rocket.velocity.speed * math.cos (rocket.velocity.angle)
+    vel_y = rocket.velocity.speed * math.sin (rocket.velocity.angle)
+
+    dv_x = rocket.accel * dt * math.cos (rocket.angle)
+    dv_y = rocket.accel * dt * math.sin (rocket.angle)
+
+    vel_x = vel_x + dv_x
+    vel_y = vel_y + dv_y
+
+    rocket.velocity.angle = math.atan2 (vel_y, vel_x)
+    rocket.velocity.speed = math.sqrt (vel_x ^ 2 + vel_y ^ 2)
+end
+
+
 function love.update (dt)
-    rocket.x = rocket.x + dt * rocket.speed * math.cos (rocket.angle)
-    rocket.y = rocket.y + dt * rocket.speed * math.sin (rocket.angle)
+    rocket.x = rocket.x + dt * rocket.velocity.speed * math.cos (rocket.velocity.angle)
+    rocket.y = rocket.y + dt * rocket.velocity.speed * math.sin (rocket.velocity.angle)
 
     if (rocket.x < 0) then
         rocket.x = rocket.x + win_width
@@ -38,15 +62,15 @@ function love.update (dt)
     end
 
     if (love.keyboard.isDown ("s")) then
-        rocket.speed = rocket.speed - rocket.accel * dt
+        accelerate_rocket (-dt)
     elseif (love.keyboard.isDown ("w")) then
-        rocket.speed = rocket.speed + rocket.accel * dt
+        accelerate_rocket (dt)
     end
 
-    if (rocket.speed < 0) then
-        rocket.speed = 0
-    elseif (rocket.speed > rocket.max_speed) then
-        rocket.speed = rocket.max_speed
+    if (rocket.velocity.speed < 0) then
+        rocket.velocity.speed = 0
+    elseif (rocket.velocity.speed > rocket.max_speed) then
+        rocket.velocity.speed = rocket.max_speed
     end
 end
 
