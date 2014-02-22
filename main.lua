@@ -1,3 +1,35 @@
+class = require '30log'
+
+local Enemy = class {}
+function Enemy:__init()
+    self.x = win_width
+    self.y = math.random () * win_height
+
+    self.velocity = {}
+    self.velocity.speed = 0
+    self.velocity.angle = 0
+    self.rad = enemy_rad
+
+    self.update = function (self, dt)
+        update_pos (self, dt)
+        wrap_edges (self)
+    end
+end
+
+local Drone = Enemy:extends()
+function Drone:__init()
+    self.super.__init(self)
+    self.velocity.speed = 100
+    self.velocity.angle = math.random () * math.pi * 2
+
+    self.draw = function (self)
+        love.graphics.setColor (255, 150, 150, 255)
+        for enemy in pairs(enemies) do
+            love.graphics.circle ("fill", enemy.x, enemy.y, enemy.rad)
+        end
+    end
+end
+
 function get_dist (o1, o2)
     return math.sqrt ((o2.x - o1.x) ^ 2 + (o2.y - o1.y) ^ 2)
 end
@@ -29,16 +61,7 @@ function fire ()
 end
 
 function generate_enemy ()
-    local enemy = {}
-
-    enemy.x = win_width;
-    enemy.y = math.random () * win_height
-
-    enemy.velocity = {}
-    enemy.velocity.speed = 100
-    enemy.velocity.angle = math.random () * math.pi * 2
-    enemy.rad = enemy_rad
-
+    local enemy = Drone ()
     enemies[enemy] = true;
 end
 
@@ -182,8 +205,7 @@ end
 
 function update_enemies (dt)
     for enemy in pairs(enemies) do
-        update_pos (enemy, dt)
-        wrap_edges (enemy)
+        enemy:update (dt)
     end
 end
 
@@ -234,9 +256,8 @@ end
 
 
 function draw_enemies ()
-    love.graphics.setColor (255, 150, 150, 255)
-    for enemy in pairs(enemies) do
-        love.graphics.circle ("fill", enemy.x, enemy.y, enemy.rad)
+    for enemy in pairs (enemies) do
+        enemy:draw ()
     end
 end
 
