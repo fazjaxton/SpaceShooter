@@ -22,6 +22,7 @@ function fire ()
     shot.velocity.angle = rocket.angle
     shot.velocity.speed = shot_speed
     shot.rad = shot_rad
+    shot.dist = 0
 
     shots[shot] = true
     fire_time = game_time
@@ -29,7 +30,7 @@ end
 
 function generate_enemy ()
     local enemy = {}
-    
+
     enemy.x = win_width;
     enemy.y = math.random () * win_height
 
@@ -50,6 +51,7 @@ function love.load ()
     fire_rate = 5
 
     fire_time = 0
+    shot_range = win_height
 
     rocket = {}
     rocket_rad = 25
@@ -78,8 +80,16 @@ end
 
 
 function update_pos (object, dt)
-    object.x = object.x + dt * object.velocity.speed * math.cos (object.velocity.angle)
-    object.y = object.y + dt * object.velocity.speed * math.sin (object.velocity.angle)
+    local dist
+
+    dist = dt * object.velocity.speed
+
+    object.x = object.x + dist * math.cos (object.velocity.angle)
+    object.y = object.y + dist * math.sin (object.velocity.angle)
+
+    if (object.dist) then
+        object.dist = object.dist + dist
+    end
 end
 
 function update_rocket_pos (dt)
@@ -181,9 +191,10 @@ end
 function update_shots (dt)
     for shot in pairs(shots) do
         update_pos (shot, dt)
-        if (shot.x < 0 or shot.x > win_width or
-                shot.y < 0 or shot.y > win_height) then
+        if (shot.dist > shot_range) then
             shots[shot] = nil
+        else
+            wrap_edges (shot)
         end
     end
 end
