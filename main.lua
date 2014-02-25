@@ -29,6 +29,33 @@ function Drone:__init()
     end
 end
 
+function angle_between (o1, o2)
+    local dy, dx
+
+    dy = o2.y - o1.y
+    dx = o2.x - o1.x
+
+    return math.atan2 (dy, dx)
+end
+
+local Seeker = Enemy:extends()
+function Seeker:__init()
+    self.super.__init(self)
+    self.velocity.speed = 100
+    self.velocity.angle = angle_between (self, rocket)
+
+    self.update = function (self, dt)
+        self.velocity.angle = angle_between (self, rocket)
+        update_pos (self, dt)
+        wrap_edges (self)
+    end
+
+    self.draw = function (self)
+        love.graphics.setColor (150, 150, 255, 255)
+        love.graphics.circle ("fill", self.x, self.y, self.rad)
+    end
+end
+
 local Player = class ()
 function Player:__init()
     self.x = win_width / 2
@@ -126,7 +153,23 @@ function fire ()
 end
 
 function generate_enemy ()
-    local enemy = Drone ()
+    local enemy
+
+    if (not which_enemy) then
+        which_enemy = 0
+    end
+
+    if (which_enemy == 0) then
+        enemy = Drone ()
+    elseif (which_enemy == 1) then
+        enemy = Seeker ()
+    end
+
+    which_enemy = which_enemy + 1
+    if (which_enemy >= 2) then
+        which_enemy = 0
+    end
+
     enemies[enemy] = true;
 end
 
