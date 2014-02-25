@@ -231,7 +231,6 @@ end
 
 
 function love.keypressed (key)
-    print (key)
     if (key == " ") then
         fire ()
     end
