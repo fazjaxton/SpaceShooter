@@ -25,9 +25,7 @@ function Drone:__init()
 
     self.draw = function (self)
         love.graphics.setColor (255, 150, 150, 255)
-        for enemy in pairs(enemies) do
-            love.graphics.circle ("fill", enemy.x, enemy.y, enemy.rad)
-        end
+        love.graphics.circle ("fill", self.x, self.y, self.rad)
     end
 end
 
