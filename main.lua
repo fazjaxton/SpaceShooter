@@ -9,6 +9,7 @@ function Enemy:__init()
     self.velocity.speed = 0
     self.velocity.angle = 0
     self.rad = enemy_rad
+    self.min_speed = 0
 
     self.update = function (self, dt)
         update_pos (self, dt)
@@ -30,6 +31,72 @@ function Drone:__init()
     end
 end
 
+local Player = class ()
+function Player:__init()
+    self.x = win_width / 2
+    self.y = win_height / 2
+
+    self.velocity = {}
+    self.velocity.speed = 0
+    self.velocity.angle = 0
+    self.angle = self.velocity.angle
+
+    self.accel = 500
+    self.min_speed = 0
+    self.max_speed = 500
+
+    self.rad = rocket_rad
+
+    self.update = function (self, dt)
+        update_pos (self, dt)
+        wrap_edges (self)
+        check_limits (self)
+    end
+
+    self.draw = function (self)
+        local polygon = {}
+
+        love.graphics.setColor (255, 255, 255, 255)
+        polygon[1] = rocket.x + rocket.rad * math.cos (rocket.angle + 0)
+        polygon[2] = rocket.y + rocket.rad * math.sin (rocket.angle + 0)
+
+        polygon[3] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 5 / 6)
+        polygon[4] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 5 / 6)
+
+        polygon[5] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 7 / 6)
+        polygon[6] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 7 / 6)
+
+        love.graphics.polygon ("fill", polygon)
+    end
+end
+
+
+local Weapon = class ()
+function Weapon:__init(ship)
+    self.x = ship.x + ship.rad * math.cos (ship.angle)
+    self.y = ship.y + ship.rad * math.sin (ship.angle)
+    self.velocity = {}
+    self.velocity.angle = ship.angle
+    self.velocity.speed = shot_speed
+    self.rad = shot_rad
+    self.dist = 0
+
+    self.update = function (self, dt)
+        update_pos (self, dt)
+        if (self.dist > shot_range) then
+            shots[self] = nil
+        else
+            wrap_edges (self)
+        end
+    end
+
+    self.draw = function (self)
+        love.graphics.setColor (0, 255, 0, 255)
+        love.graphics.circle ("fill", self.x, self.y, self.rad)
+    end
+end
+
+
 function get_dist (o1, o2)
     return math.sqrt ((o2.x - o1.x) ^ 2 + (o2.y - o1.y) ^ 2)
 end
@@ -40,21 +107,21 @@ function collide (o1, o2)
 end
 
 
-function fire ()
-    local shot = {}
+function check_limits (object)
+    if (object.velocity.speed < object.min_speed) then
+        object.velocity.speed = object.min_speed
+    elseif (object.velocity.speed > object.max_speed) then
+        object.velocity.speed = object.max_speed
+    end
+end
 
+function fire ()
     -- Don't fire faster than max rate
     if (game_time < fire_time + 1 / fire_rate) then
         return
     end
 
-    shot.x = rocket.x + rocket.rad * math.cos (rocket.angle)
-    shot.y = rocket.y + rocket.rad * math.sin (rocket.angle)
-    shot.velocity = {}
-    shot.velocity.angle = rocket.angle
-    shot.velocity.speed = shot_speed
-    shot.rad = shot_rad
-    shot.dist = 0
+    local shot = Weapon (rocket)
 
     shots[shot] = true
     fire_time = game_time
@@ -69,35 +136,23 @@ function love.load ()
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
 
-    game_time = 0
-    enemy_time = 2
-    fire_rate = 5
-
-    fire_time = 0
-    shot_range = win_height
-
-    rocket = {}
     rocket_rad = 25
     spin_rps = 6
 
     shot_speed = 1000
     shot_rad = 4
-
-    rocket.x = win_width / 2
-    rocket.y = win_height / 2
-    rocket.velocity = {}
-    rocket.velocity.angle = math.pi / 8
-    rocket.velocity.speed = 0
-    rocket.rad = rocket_rad
-
-    rocket.angle = rocket.velocity.angle
-
-    rocket.accel = 500
-    rocket.max_speed = 500
-
-    enemies = {}
     enemy_rad = 15
 
+    game_time = 0
+    fire_time = 0
+
+    enemy_interval = 2
+    fire_rate = 5
+    shot_range = win_height
+
+    rocket = Player ()
+
+    enemies = {}
     shots = {}
 end
 
@@ -113,10 +168,6 @@ function update_pos (object, dt)
     if (object.dist) then
         object.dist = object.dist + dist
     end
-end
-
-function update_rocket_pos (dt)
-    update_pos (rocket, dt)
 end
 
 function accelerate_rocket (dt)
@@ -192,14 +243,9 @@ function check_collisions ()
     end
 end
 
-function check_limits ()
-    wrap_edges (rocket)
 
-    if (rocket.velocity.speed < 0) then
-        rocket.velocity.speed = 0
-    elseif (rocket.velocity.speed > rocket.max_speed) then
-        rocket.velocity.speed = rocket.max_speed
-    end
+function update_rocket_pos (dt)
+    rocket:update (dt)
 end
 
 
@@ -212,24 +258,18 @@ end
 
 function update_shots (dt)
     for shot in pairs(shots) do
-        update_pos (shot, dt)
-        if (shot.dist > shot_range) then
-            shots[shot] = nil
-        else
-            wrap_edges (shot)
-        end
+        shot:update (dt)
     end
 end
 
 function love.update (dt)
-    if (math.floor ((game_time + dt) / enemy_time) > math.floor (game_time / enemy_time)) then
+    if (math.floor ((game_time + dt) / enemy_interval) > math.floor (game_time / enemy_interval)) then
         generate_enemy ()
     end
     game_time = game_time + dt
 
     handle_inputs (dt)
     update_rocket_pos (dt)
-    check_limits ()
 
     update_enemies (dt)
     update_shots (dt)
@@ -239,19 +279,7 @@ end
 
 
 function draw_rocket ()
-    local rocket_polygon = {}
-
-    love.graphics.setColor (255, 255, 255, 255)
-    rocket_polygon[1] = rocket.x + rocket.rad * math.cos (rocket.angle + 0)
-    rocket_polygon[2] = rocket.y + rocket.rad * math.sin (rocket.angle + 0)
-
-    rocket_polygon[3] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 5 / 6)
-    rocket_polygon[4] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 5 / 6)
-
-    rocket_polygon[5] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 7 / 6)
-    rocket_polygon[6] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 7 / 6)
-
-    love.graphics.polygon ("fill", rocket_polygon)
+    rocket:draw ()
 end
 
 
@@ -263,9 +291,8 @@ end
 
 
 function draw_shots ()
-    love.graphics.setColor (0, 255, 0, 255)
     for shot in pairs(shots) do
-        love.graphics.circle ("fill", shot.x, shot.y, shot.rad)
+        shot:draw ()
     end
 end
 
