@@ -1,36 +1,9 @@
 class = require '30log'
 
-local Enemy = class {}
-function Enemy:__init()
-    self.x = win_width
-    self.y = math.random () * win_height
+require 'player'
+require 'weapon'
+require 'enemy'
 
-    self.velocity = {}
-    self.velocity.speed = 0
-    self.velocity.angle = 0
-    self.rad = enemy_rad
-
-    self.bounds = {}
-    self.bounds.rad = enemy_rad
-    self.min_speed = 0
-
-    self.update = function (self, dt)
-        update_pos (self, dt)
-        wrap_edges (self)
-    end
-end
-
-local Drone = Enemy:extends()
-function Drone:__init()
-    self.super.__init(self)
-    self.velocity.speed = 100
-    self.velocity.angle = math.random () * math.pi * 2
-
-    self.draw = function (self)
-        love.graphics.setColor (255, 150, 150, 255)
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
-    end
-end
 
 function angle_between (o1, o2)
     local dy, dx
@@ -39,98 +12,6 @@ function angle_between (o1, o2)
     dx = o2.x - o1.x
 
     return math.atan2 (dy, dx)
-end
-
-local Seeker = Enemy:extends()
-function Seeker:__init()
-    self.super.__init(self)
-    self.velocity.speed = 100
-    self.velocity.angle = angle_between (self, rocket)
-
-    self.update = function (self, dt)
-        self.velocity.angle = angle_between (self, rocket)
-        update_pos (self, dt)
-        wrap_edges (self)
-    end
-
-    self.draw = function (self)
-        love.graphics.setColor (150, 150, 255, 255)
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
-    end
-end
-
-local Player = class ()
-function Player:__init()
-    self.x = win_width / 2
-    self.y = win_height / 2
-
-    self.velocity = {}
-    self.velocity.speed = 0
-    self.velocity.angle = 0
-    self.angle = self.velocity.angle
-
-    self.accel = 500
-    self.min_speed = 0
-    self.max_speed = 500
-
-    self.rad = rocket_rad
-
-    self.bounds = {}
-    self.bounds.rad = rocket_rad * 0.6
-
-    self.update = function (self, dt)
-        if (not draw_player) then
-            return
-        end
-        update_pos (self, dt)
-        wrap_edges (self)
-        check_limits (self)
-    end
-
-    self.draw = function (self)
-        local polygon = {}
-
-        love.graphics.setColor (255, 255, 255, 255)
-        polygon[1] = rocket.x + rocket.rad * math.cos (rocket.angle + 0)
-        polygon[2] = rocket.y + rocket.rad * math.sin (rocket.angle + 0)
-
-        polygon[3] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 5 / 6)
-        polygon[4] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 5 / 6)
-
-        polygon[5] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 7 / 6)
-        polygon[6] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 7 / 6)
-
-        love.graphics.polygon ("fill", polygon)
-        love.graphics.circle ("line", rocket.x, rocket.y, rocket.bounds.rad)
-    end
-end
-
-
-local Weapon = class ()
-function Weapon:__init(ship)
-    self.x = ship.x + ship.rad * math.cos (ship.angle)
-    self.y = ship.y + ship.rad * math.sin (ship.angle)
-    self.velocity = {}
-    self.velocity.angle = ship.angle
-    self.velocity.speed = shot_speed
-    self.rad = shot_rad
-    self.bounds = {}
-    self.bounds.rad = shot_rad
-    self.dist = 0
-
-    self.update = function (self, dt)
-        update_pos (self, dt)
-        if (self.dist > shot_range) then
-            shots[self] = nil
-        else
-            wrap_edges (self)
-        end
-    end
-
-    self.draw = function (self)
-        love.graphics.setColor (0, 255, 0, 255)
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
-    end
 end
 
 
@@ -152,6 +33,7 @@ function check_limits (object)
     end
 end
 
+
 function fire ()
     -- Don't fire faster than max rate
     if (game_time < fire_time + 1 / fire_rate) then
@@ -163,6 +45,7 @@ function fire ()
     shots[shot] = true
     fire_time = game_time
 end
+
 
 function generate_enemy ()
     local enemy
@@ -185,6 +68,7 @@ function generate_enemy ()
     enemies[enemy] = true;
 end
 
+
 function love.load ()
     game_running = true
     draw_player = true
@@ -193,7 +77,6 @@ function love.load ()
     win_height = love.window.getHeight ()
 
     rocket_rad = 25
-    spin_rps = 6
 
     shot_speed = 1000
     shot_rad = 4
@@ -226,24 +109,6 @@ function update_pos (object, dt)
     end
 end
 
-function accelerate_rocket (dt)
-    local dx, dy
-    local vel_x, vel_y
-    local dv_x, dv_y
-
-    vel_x = rocket.velocity.speed * math.cos (rocket.velocity.angle)
-    vel_y = rocket.velocity.speed * math.sin (rocket.velocity.angle)
-
-    dv_x = rocket.accel * dt * math.cos (rocket.angle)
-    dv_y = rocket.accel * dt * math.sin (rocket.angle)
-
-    vel_x = vel_x + dv_x
-    vel_y = vel_y + dv_y
-
-    rocket.velocity.angle = math.atan2 (vel_y, vel_x)
-    rocket.velocity.speed = math.sqrt (vel_x ^ 2 + vel_y ^ 2)
-end
-
 
 function love.keypressed (key)
     if (key == " ") then
@@ -254,15 +119,15 @@ end
 
 function handle_inputs (dt)
     if (love.keyboard.isDown ("a") or love.keyboard.isDown ("left")) then
-        rocket.angle = rocket.angle - spin_rps * dt
+        rocket:spin (-dt)
     elseif (love.keyboard.isDown ("d") or love.keyboard.isDown ("right")) then
-        rocket.angle = rocket.angle + spin_rps * dt
+        rocket:spin (dt)
     end
 
     if (love.keyboard.isDown ("s") or love.keyboard.isDown ("down")) then
-        accelerate_rocket (-dt)
+        rocket:accelerate (-dt)
     elseif (love.keyboard.isDown ("w") or love.keyboard.isDown ("up")) then
-        accelerate_rocket (dt)
+        rocket:accelerate (dt)
     end
 
     if (love.keyboard.isDown (" ")) then
