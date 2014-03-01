@@ -49,3 +49,10 @@ function Seeker:__init()
     end
 end
 
+local generator = {}
+generator["drone"] = Drone
+generator["seeker"] = Seeker
+
+function generate_enemy (type)
+    return generator[type] ()
+end

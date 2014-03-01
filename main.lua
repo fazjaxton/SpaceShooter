@@ -47,28 +47,6 @@ function fire ()
 end
 
 
-function generate_enemy ()
-    local enemy
-
-    if (not which_enemy) then
-        which_enemy = 0
-    end
-
-    if (which_enemy == 0) then
-        enemy = Drone ()
-    elseif (which_enemy == 1) then
-        enemy = Seeker ()
-    end
-
-    which_enemy = which_enemy + 1
-    if (which_enemy >= 2) then
-        which_enemy = 0
-    end
-
-    enemies[enemy] = true;
-end
-
-
 function love.load ()
     game_running = true
     draw_player = true
@@ -85,6 +63,7 @@ function love.load ()
     game_time = 0
     fire_time = 0
 
+    which_enemy = 1
     enemy_interval = 2
     fire_rate = 5
     shot_range = win_height
@@ -187,13 +166,25 @@ function update_shots (dt)
     end
 end
 
+
+enemy_order = {"drone", "seeker"}
 function love.update (dt)
     if (not game_running) then
         return
     end
 
     if (math.floor ((game_time + dt) / enemy_interval) > math.floor (game_time / enemy_interval)) then
-        generate_enemy ()
+        local enemy
+        local enemy_type
+
+        enemy_type = enemy_order[which_enemy];
+        which_enemy = which_enemy + 1
+        if (which_enemy > 2) then
+            which_enemy = 1
+        end
+
+        enemy = generate_enemy (enemy_type)
+        enemies[enemy] = true;
     end
     game_time = game_time + dt
 
