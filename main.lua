@@ -9,6 +9,9 @@ function Enemy:__init()
     self.velocity.speed = 0
     self.velocity.angle = 0
     self.rad = enemy_rad
+
+    self.bounds = {}
+    self.bounds.rad = enemy_rad
     self.min_speed = 0
 
     self.update = function (self, dt)
@@ -72,7 +75,13 @@ function Player:__init()
 
     self.rad = rocket_rad
 
+    self.bounds = {}
+    self.bounds.rad = rocket_rad * 0.6
+
     self.update = function (self, dt)
+        if (not draw_player) then
+            return
+        end
         update_pos (self, dt)
         wrap_edges (self)
         check_limits (self)
@@ -92,6 +101,7 @@ function Player:__init()
         polygon[6] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 7 / 6)
 
         love.graphics.polygon ("fill", polygon)
+        love.graphics.circle ("line", rocket.x, rocket.y, rocket.bounds.rad)
     end
 end
 
@@ -104,6 +114,8 @@ function Weapon:__init(ship)
     self.velocity.angle = ship.angle
     self.velocity.speed = shot_speed
     self.rad = shot_rad
+    self.bounds = {}
+    self.bounds.rad = shot_rad
     self.dist = 0
 
     self.update = function (self, dt)
@@ -128,7 +140,7 @@ end
 
 
 function collide (o1, o2)
-    return (get_dist (o1, o2) < o1.rad + o2.rad)
+    return (get_dist (o1, o2) < o1.bounds.rad + o2.bounds.rad)
 end
 
 
@@ -174,6 +186,9 @@ function generate_enemy ()
 end
 
 function love.load ()
+    game_running = true
+    draw_player = true
+
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
 
@@ -272,13 +287,18 @@ end
 
 
 function check_collisions ()
-    for shot in pairs(shots) do
-        for enemy in pairs(enemies) do
+    for enemy in pairs(enemies) do
+        for shot in pairs(shots) do
             if (collide (shot, enemy)) then
                 enemies[enemy] = nil
                 shots[shot] = nil
                 break
             end
+        end
+
+        if (collide (rocket, enemy)) then
+            game_running = false
+            draw_player = false
         end
     end
 end
@@ -303,6 +323,10 @@ function update_shots (dt)
 end
 
 function love.update (dt)
+    if (not game_running) then
+        return
+    end
+
     if (math.floor ((game_time + dt) / enemy_interval) > math.floor (game_time / enemy_interval)) then
         generate_enemy ()
     end
