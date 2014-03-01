@@ -1,6 +1,7 @@
 class = require '30log'
 
 require 'player'
+require 'level'
 require 'weapon'
 require 'enemy'
 
@@ -69,6 +70,7 @@ function love.load ()
     shot_range = win_height
 
     rocket = Player ()
+    level = Level ()
 
     enemies = {}
     shots = {}
@@ -167,26 +169,13 @@ function update_shots (dt)
 end
 
 
-enemy_order = {"drone", "seeker"}
 function love.update (dt)
     if (not game_running) then
         return
     end
 
-    if (math.floor ((game_time + dt) / enemy_interval) > math.floor (game_time / enemy_interval)) then
-        local enemy
-        local enemy_type
-
-        enemy_type = enemy_order[which_enemy];
-        which_enemy = which_enemy + 1
-        if (which_enemy > 2) then
-            which_enemy = 1
-        end
-
-        enemy = generate_enemy (enemy_type)
-        enemies[enemy] = true;
-    end
     game_time = game_time + dt
+    level:update (game_time)
 
     handle_inputs (dt)
     update_rocket_pos (dt)
