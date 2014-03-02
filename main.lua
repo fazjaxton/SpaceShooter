@@ -130,16 +130,16 @@ end
 
 
 function check_collisions ()
-    for enemy in pairs(enemies) do
-        for shot in pairs(shots) do
-            if (collide (shot, enemy)) then
-                enemies[enemy] = nil
-                enemy_count = enemy_count - 1
-                shots[shot] = nil
-                break
+    for shot in pairs(shots) do
+        for target in pairs(shot.harms) do
+            if (collide (shot, target)) then
+                target:hit_with (shot)
+                shot:hit ()
             end
         end
+    end
 
+    for enemy in pairs(enemies) do
         if (collide (rocket, enemy)) then
             game_running = false
             draw_player = false

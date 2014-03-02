@@ -13,6 +13,11 @@ function Enemy:__init()
     self.min_speed = 0
     self.drop = nil
 
+    self.hit_with = function (self, shot)
+        enemies[self] = nil
+        enemy_count = enemy_count -1
+    end
+
     self.update = function (self, dt)
         update_pos (self, dt)
         wrap_edges (self)

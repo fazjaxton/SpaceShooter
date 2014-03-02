@@ -10,6 +10,8 @@ function Weapon:__init(ship)
     self.bounds.rad = shot_rad
     self.dist = 0
 
+    self.harms = enemies
+
     self.update = function (self, dt)
         update_pos (self, dt)
         if (self.dist > shot_range) then
@@ -17,6 +19,10 @@ function Weapon:__init(ship)
         else
             wrap_edges (self)
         end
+    end
+
+    self.hit = function (self)
+        shots[self] = nil
     end
 
     self.draw = function (self)

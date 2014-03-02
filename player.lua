@@ -45,6 +45,9 @@ function Player:__init()
         love.graphics.circle ("line", rocket.x, rocket.y, rocket.bounds.rad)
     end
 
+    self.hit_with = function (self, shot)
+    end
+
     self.accelerate = function (self, dt)
         local dx, dy
         local vel_x, vel_y
