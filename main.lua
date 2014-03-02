@@ -71,7 +71,7 @@ function GameState:__init(update, draw, key, mouse)
 end
 
 function start_screen_key (key)
-    current_state = "level"
+    start_next_level ()
 end
 
 function playing_key (key)
@@ -81,6 +81,9 @@ function playing_key (key)
 end
 
 function love.keypressed (key)
+    if (key == "?") then
+    end
+
     if (game.state[current_state].keypressed) then
         game.state[current_state].keypressed (key)
     end
@@ -131,6 +134,7 @@ function check_collisions ()
         for shot in pairs(shots) do
             if (collide (shot, enemy)) then
                 enemies[enemy] = nil
+                enemy_count = enemy_count - 1
                 shots[shot] = nil
                 break
             end
@@ -191,10 +195,21 @@ function level_start_update (game_time, dt)
     if (not level_name_display_start) then
         level_name_display_start = game_time
     elseif (game_time - level_name_display_start >= level_name_display) then
+        level_name_display_start = nil
         current_state = "playing"
     end
 end
 
+
+function start_next_level ()
+    game_level_index = game_level_index + 1
+    if (game_level_index > #game_levels) then
+        current_state = "win"
+    else
+        level = game_levels[game_level_index] ()
+        current_state = "level"
+    end
+end
 
 function playing_update (game_time, dt)
     level:update (game_time)
@@ -206,7 +221,17 @@ function playing_update (game_time, dt)
     update_shots (dt)
 
     check_collisions ()
+
+    if (level:complete ()) then
+        start_next_level ()
+    end
 end
+
+
+function win_draw ()
+    print_centered ("You Win!")
+end
+
 
 function love.load ()
     game = {}
@@ -215,6 +240,7 @@ function love.load ()
     game.state["start"] = GameState (nil, start_screen_draw, start_screen_key)
     game.state["level"] = GameState (level_start_update, level_start_draw)
     game.state["playing"] = GameState (playing_update, playing_draw, playing_key)
+    game.state["win"] = GameState (nil, win_draw)
 
     level_name_display = 3
     current_state = "start"
@@ -239,7 +265,9 @@ function love.load ()
     shot_range = win_height
 
     rocket = Player ()
-    level = Level ()
+
+    -- Index incremented to 1 in start_next_level
+    game_level_index = 0
 
     enemies = {}
     shots = {}
