@@ -48,35 +48,6 @@ function fire ()
 end
 
 
-function love.load ()
-    game_running = true
-    draw_player = true
-
-    win_width = love.window.getWidth ()
-    win_height = love.window.getHeight ()
-
-    rocket_rad = 25
-
-    shot_speed = 1000
-    shot_rad = 4
-    enemy_rad = 15
-
-    game_time = 0
-    fire_time = 0
-
-    which_enemy = 1
-    enemy_interval = 2
-    fire_rate = 5
-    shot_range = win_height
-
-    rocket = Player ()
-    level = Level ()
-
-    enemies = {}
-    shots = {}
-end
-
-
 function update_pos (object, dt)
     local dist
 
@@ -91,12 +62,35 @@ function update_pos (object, dt)
 end
 
 
-function love.keypressed (key)
+GameState = class ()
+function GameState:__init(update, draw, key, mouse)
+    self.update = update
+    self.draw = draw
+    self.keypressed = key
+    self.mousepressed = mouse
+end
+
+function start_screen_key (key)
+    current_state = "level"
+end
+
+function playing_key (key)
     if (key == " ") then
         fire ()
     end
 end
 
+function love.keypressed (key)
+    if (game.state[current_state].keypressed) then
+        game.state[current_state].keypressed (key)
+    end
+end
+
+function love.mousepressed (x, y, button)
+    if (game.state[current_state].mousepressed) then
+        game.state[current_state].mousepressed (x, y. button)
+    end
+end
 
 function handle_inputs (dt)
     if (love.keyboard.isDown ("a") or love.keyboard.isDown ("left")) then
@@ -169,12 +163,40 @@ function update_shots (dt)
 end
 
 
-function love.update (dt)
-    if (not game_running) then
-        return
-    end
+function print_centered (text)
+    local h,w,x,y,scale
 
-    game_time = game_time + dt
+    scale = 5
+    font = love.graphics.getFont ()
+    w = font:getWidth (text);
+    h = font:getHeight (text);
+
+    x = (win_width - w * scale) / 2
+    y = (win_height - h * scale) / 2
+    love.graphics.print (text, x, y, 0, scale, scale)
+end
+
+
+function start_screen_draw (game_time, dt)
+    print_centered ("Press a key to Start")
+end
+
+
+function level_start_draw ()
+    print_centered (level.name)
+end
+
+
+function level_start_update (game_time, dt)
+    if (not level_name_display_start) then
+        level_name_display_start = game_time
+    elseif (game_time - level_name_display_start >= level_name_display) then
+        current_state = "playing"
+    end
+end
+
+
+function playing_update (game_time, dt)
     level:update (game_time)
 
     handle_inputs (dt)
@@ -184,6 +206,52 @@ function love.update (dt)
     update_shots (dt)
 
     check_collisions ()
+end
+
+function love.load ()
+    game = {}
+    game.state = {}
+
+    game.state["start"] = GameState (nil, start_screen_draw, start_screen_key)
+    game.state["level"] = GameState (level_start_update, level_start_draw)
+    game.state["playing"] = GameState (playing_update, playing_draw, playing_key)
+
+    level_name_display = 3
+    current_state = "start"
+    game_running = true
+    draw_player = true
+
+    win_width = love.window.getWidth ()
+    win_height = love.window.getHeight ()
+
+    rocket_rad = 25
+
+    shot_speed = 1000
+    shot_rad = 4
+    enemy_rad = 15
+
+    game_time = 0
+    fire_time = 0
+
+    which_enemy = 1
+    enemy_interval = 2
+    fire_rate = 5
+    shot_range = win_height
+
+    rocket = Player ()
+    level = Level ()
+
+    enemies = {}
+    shots = {}
+end
+
+
+function love.update (dt)
+    game_time = game_time + dt
+
+    if (game.state[current_state].update) then
+        game.state[current_state].update (game_time, dt)
+    end
 end
 
 
@@ -206,9 +274,13 @@ function draw_shots ()
 end
 
 
-function love.draw ()
+function playing_draw ()
     draw_rocket ()
     draw_enemies ()
     draw_shots ()
+end
+
+function love.draw ()
+    game.state[current_state].draw ()
 end
 
