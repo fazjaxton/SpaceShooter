@@ -19,6 +19,9 @@ function Player:__init()
     self.bounds = {}
     self.bounds.rad = rocket_rad * 0.6
 
+    self.weapons = {}
+    self.weapons[PlayerCannon (self)] = true
+
     self.update = function (self, dt)
         if (not draw_player) then
             return

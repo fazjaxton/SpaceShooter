@@ -35,19 +35,6 @@ function check_limits (object)
 end
 
 
-function fire ()
-    -- Don't fire faster than max rate
-    if (game_time < fire_time + 1 / fire_rate) then
-        return
-    end
-
-    local shot = Weapon (rocket)
-
-    shots[shot] = true
-    fire_time = game_time
-end
-
-
 function update_pos (object, dt)
     local dist
 
@@ -76,7 +63,9 @@ end
 
 function playing_key (key)
     if (key == " ") then
-        fire ()
+        for weapon in pairs (rocket.weapons) do
+            weapon.fire ()
+        end
     end
 end
 
@@ -109,7 +98,7 @@ function handle_inputs (dt)
     end
 
     if (love.keyboard.isDown (" ")) then
-        fire ()
+        playing_key (" ")
     end
 end
 
