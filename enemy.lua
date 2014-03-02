@@ -26,7 +26,7 @@ end
 
 Drone = Enemy:extends()
 function Drone:__init()
-    self.super.__init(self)
+    Drone.super.__init(self)
     self.velocity.speed = 100
     self.velocity.angle = math.random () * math.pi * 2
 
@@ -38,7 +38,7 @@ end
 
 Seeker = Enemy:extends()
 function Seeker:__init()
-    self.super.__init(self)
+    Seeker.super.__init(self)
     self.velocity.speed = 100
     self.velocity.angle = angle_between (self, rocket)
 

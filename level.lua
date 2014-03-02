@@ -32,7 +32,7 @@ end
 
 Level1 = Level:extends ()
 function Level1:__init()
-    self.super.__init(self)
+    Level1.super.__init(self)
 
     self.name = "Level 1"
     self.enemy_order = { "drone" }
@@ -41,7 +41,7 @@ end
 
 Level2 = Level:extends ()
 function Level2:__init()
-    self.super.__init(self)
+    Level2.super.__init(self)
 
     self.name = "Level 2"
     self.enemy_order = { "drone", "drone", "drone", "drone", "drone", "drone", "drone", "drone", "drone" }
