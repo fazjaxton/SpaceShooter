@@ -44,7 +44,7 @@ function Level2:__init()
     Level2.super.__init(self)
 
     self.name = "Level 2"
-    self.enemy_order = { "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone" }
+    self.enemy_order = { "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone" }
     self.enemy_timing = 0.25
 end
 

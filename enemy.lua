@@ -70,10 +70,18 @@ function CannonDrone:__init()
     self.weapons[EnemyCannon (self)] = true
 end
 
+MissileDrone = Drone:extends()
+function MissileDrone:__init()
+    MissileDrone.super.__init(self)
+
+    self.weapons[EnemyMissile (self)] = true
+end
+
 local generator = {}
 generator["drone"] = Drone
 generator["seeker"] = Seeker
 generator["cannondrone"] = CannonDrone
+generator["missiledrone"] = MissileDrone
 
 function generate_enemy (type)
     return generator[type] ()
