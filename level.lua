@@ -20,6 +20,9 @@ function Level:__init()
     self.last_enemy_time = game_time
     enemy_count = 0
 
+    -- Clear any existing shots
+    shots = {}
+
     self.update = release_enemy
 
     self.complete = function (self)
