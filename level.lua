@@ -35,7 +35,7 @@ function Level1:__init()
     Level1.super.__init(self)
 
     self.name = "Level 1"
-    self.enemy_order = { "drone" }
+    self.enemy_order = { "cannondrone" }
     self.enemy_timing = 1
 end
 
@@ -44,7 +44,7 @@ function Level2:__init()
     Level2.super.__init(self)
 
     self.name = "Level 2"
-    self.enemy_order = { "drone", "drone", "drone", "drone", "drone", "drone", "drone", "drone", "drone" }
+    self.enemy_order = { "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone", "cannondrone" }
     self.enemy_timing = 0.25
 end
 

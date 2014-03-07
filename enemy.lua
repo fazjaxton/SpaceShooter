@@ -8,10 +8,14 @@ function Enemy:__init()
     self.velocity.angle = 0
     self.rad = enemy_rad
 
+    self.angle = self.velocity.angle
+
     self.bounds = {}
     self.bounds.rad = enemy_rad
     self.min_speed = 0
     self.drop = nil
+
+    self.weapons = {}
 
     self.hit_with = function (self, shot)
         enemies[self] = nil
@@ -21,6 +25,9 @@ function Enemy:__init()
     self.update = function (self, dt)
         update_pos (self, dt)
         wrap_edges (self)
+        for weapon in pairs (self.weapons) do
+            weapon.fire ()
+        end
     end
 end
 
@@ -29,6 +36,7 @@ function Drone:__init()
     Drone.super.__init(self)
     self.velocity.speed = 100
     self.velocity.angle = math.random () * math.pi * 2
+    self.angle = self.velocity.angle
 
     self.draw = function (self)
         love.graphics.setColor (255, 150, 150, 255)
@@ -44,6 +52,7 @@ function Seeker:__init()
 
     self.update = function (self, dt)
         self.velocity.angle = angle_between (self, rocket)
+        self.angle = self.velocity.angle
         update_pos (self, dt)
         wrap_edges (self)
     end
@@ -54,9 +63,17 @@ function Seeker:__init()
     end
 end
 
+CannonDrone = Drone:extends()
+function CannonDrone:__init()
+    CannonDrone.super.__init(self)
+
+    self.weapons[EnemyCannon (self)] = true
+end
+
 local generator = {}
 generator["drone"] = Drone
 generator["seeker"] = Seeker
+generator["cannondrone"] = CannonDrone
 
 function generate_enemy (type)
     return generator[type] ()

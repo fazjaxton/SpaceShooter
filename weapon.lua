@@ -1,5 +1,5 @@
 Shot = class ()
-function Shot:__init()
+function Shot:__init(ship, target)
     self.dist = 0
 
     self.update = function (self, dt)
@@ -18,14 +18,22 @@ end
 
 
 CannonShot = Shot:extends ()
-function CannonShot:__init (ship)
-    CannonShot.super.__init(self)
+function CannonShot:__init (ship, target)
+    CannonShot.super.__init(self, ship, target)
 
-    self.x = ship.x + ship.rad * math.cos (ship.angle)
-    self.y = ship.y + ship.rad * math.sin (ship.angle)
     self.velocity = {}
-    self.velocity.angle = ship.angle
-    self.velocity.speed = shot_speed
+
+    if (target) then
+        self.velocity.angle = angle_between (ship, rocket)
+    else
+        self.velocity.angle = ship.angle
+    end
+
+    self.velocity.speed = 100
+
+    self.x = ship.x + ship.rad * math.cos (self.velocity.angle)
+    self.y = ship.y + ship.rad * math.sin (self.velocity.angle)
+
     self.rad = shot_rad
     self.bounds = {}
     self.bounds.rad = shot_rad
@@ -37,10 +45,21 @@ function CannonShot:__init (ship)
 end
 
 PlayerCannonShot = CannonShot:extends ()
-function PlayerCannonShot:__init (ship)
-    PlayerCannonShot.super.__init(self, ship)
+function PlayerCannonShot:__init (ship, target)
+    PlayerCannonShot.super.__init(self, ship, target)
+
+    self.velocity.speed = shot_speed
 
     self.harms = enemies
+end
+
+
+EnemyCannonShot = CannonShot:extends ()
+function EnemyCannonShot:__init (ship, target)
+    EnemyCannonShot.super.__init(self, ship, target)
+
+    self.harms = {}
+    self.harms[rocket] = true
 end
 
 
@@ -55,7 +74,7 @@ function Weapon:__init(owner)
             return
         end
 
-        local shot = self.shoot (self.owner)
+        local shot = self.shoot (self.owner, self:get_target())
 
         shots[shot] = true
         self.fire_time = game_time
@@ -72,4 +91,19 @@ function PlayerCannon:__init(owner)
     PlayerCannon.super.__init(self, owner)
     self.shoot = PlayerCannonShot
     self.fire_rate = 5
+
+    self.get_target = function (self)
+        return nil
+    end
+end
+
+EnemyCannon = Cannon:extends ()
+function EnemyCannon:__init(owner)
+    EnemyCannon.super.__init(self, owner)
+    self.shoot = EnemyCannonShot
+    self.fire_rate = 0.5
+
+    self.get_target = function (self)
+        return rocket
+    end
 end
