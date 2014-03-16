@@ -12,6 +12,7 @@ function Enemy:__init()
 
     self.bounds = {}
     self.bounds.rad = enemy_rad
+    self.max_speed = 100
     self.min_speed = 0
     self.drop = nil
 
@@ -49,10 +50,12 @@ function Seeker:__init()
     Seeker.super.__init(self)
     self.velocity.speed = 100
     self.velocity.angle = angle_between (self, rocket)
+    self.accel = 500
 
     self.update = function (self, dt)
-        self.velocity.angle = angle_between (self, rocket)
-        self.angle = self.velocity.angle
+        self.angle = angle_between (self, rocket)
+        accelerate (self, dt)
+        check_limits (self)
         update_pos (self, dt)
         wrap_edges (self)
     end

@@ -51,23 +51,7 @@ function Player:__init()
     self.hit_with = function (self, shot)
     end
 
-    self.accelerate = function (self, dt)
-        local dx, dy
-        local vel_x, vel_y
-        local dv_x, dv_y
-
-        vel_x = self.velocity.speed * math.cos (self.velocity.angle)
-        vel_y = self.velocity.speed * math.sin (self.velocity.angle)
-
-        dv_x = self.accel * dt * math.cos (self.angle)
-        dv_y = self.accel * dt * math.sin (self.angle)
-
-        vel_x = vel_x + dv_x
-        vel_y = vel_y + dv_y
-
-        self.velocity.angle = math.atan2 (vel_y, vel_x)
-        self.velocity.speed = math.sqrt (vel_x ^ 2 + vel_y ^ 2)
-    end
+    self.accelerate = accelerate
 
     self.spin = function (self, dt)
         self.angle = self.angle + self.spin_rps * dt

@@ -49,6 +49,25 @@ function update_pos (object, dt)
 end
 
 
+function accelerate (self, dt)
+    local dx, dy
+    local vel_x, vel_y
+    local dv_x, dv_y
+
+    vel_x = self.velocity.speed * math.cos (self.velocity.angle)
+    vel_y = self.velocity.speed * math.sin (self.velocity.angle)
+
+    dv_x = self.accel * dt * math.cos (self.angle)
+    dv_y = self.accel * dt * math.sin (self.angle)
+
+    vel_x = vel_x + dv_x
+    vel_y = vel_y + dv_y
+
+    self.velocity.angle = math.atan2 (vel_y, vel_x)
+    self.velocity.speed = math.sqrt (vel_x ^ 2 + vel_y ^ 2)
+end
+
+
 GameState = class ()
 function GameState:__init(update, draw, key, mouse)
     self.update = update

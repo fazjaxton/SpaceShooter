@@ -3,6 +3,7 @@ function Shot:__init(ship, target)
     self.dist = 0
     self.target = target
     self.accel = 0
+    self.min_speed = 0
 
     self.velocity = {}
 
@@ -51,13 +52,17 @@ function MissileShot:__init (ship, target)
     MissileShot.super.__init(self, ship, target)
 
     self.velocity.speed = 200
+    self.accel = 300
+    self.max_speed = 200
 
     self.rad = shot_rad
     self.bounds = {}
     self.bounds.rad = shot_rad
 
     self.update = function (self, dt)
-        self.velocity.angle = angle_between (self, target)
+        self.angle = angle_between (self, self.target)
+        accelerate (self, dt)
+        check_limits (self)
         update_pos (self, dt)
     end
 
