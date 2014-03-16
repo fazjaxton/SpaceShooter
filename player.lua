@@ -14,7 +14,10 @@ function Player:__init()
 
     self.rad = rocket_rad
 
-    self.spin_rps = 6
+    self.spin_rps = 0
+    self.spin_max = 6
+    -- Radians per second per second
+    self.spin_accel = 25
 
     self.bounds = {}
     self.bounds.rad = rocket_rad * 0.6
@@ -53,8 +56,12 @@ function Player:__init()
 
     self.accelerate = accelerate
 
-    self.spin = function (self, dt)
-        self.angle = self.angle + self.spin_rps * dt
+    self.spin = function (self, dir, dt)
+        self.spin_rps = self.spin_rps + self.spin_accel * dt
+        if (self.spin_rps > self.spin_max) then
+            self.spin_rps = self.spin_max
+        end
+        self.angle = self.angle + self.spin_rps * dir * dt
     end
 end
 

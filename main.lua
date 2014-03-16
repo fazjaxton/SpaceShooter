@@ -105,9 +105,11 @@ end
 
 function handle_inputs (dt)
     if (love.keyboard.isDown ("a") or love.keyboard.isDown ("left")) then
-        rocket:spin (-dt)
+        rocket:spin (-1, dt)
     elseif (love.keyboard.isDown ("d") or love.keyboard.isDown ("right")) then
-        rocket:spin (dt)
+        rocket:spin (1, dt)
+    else
+        rocket.spin_rps = 0
     end
 
     if (love.keyboard.isDown ("s") or love.keyboard.isDown ("down")) then
