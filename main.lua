@@ -175,17 +175,24 @@ function update_shots (dt)
 end
 
 
-function print_centered (text)
-    local h,w,x,y,scale
+function print_centered (text, sizedesc)
+    local h,w,x,y
 
-    scale = 5
-    font = love.graphics.getFont ()
+    if (not sizedesc) then
+        sizedesc = "large"
+    end
+
+    local font = font[sizedesc]
+    love.graphics.setFont (font)
+
     w = font:getWidth (text);
     h = font:getHeight (text);
 
-    x = (win_width - w * scale) / 2
-    y = (win_height - h * scale) / 2
-    love.graphics.print (text, x, y, 0, scale, scale)
+    x = (win_width - w) / 2
+    y = (win_height - h) / 2
+
+    love.graphics.setColor (255, 255, 255, 255)
+    love.graphics.print (text, x, y, 0)
 end
 
 
@@ -249,6 +256,11 @@ function love.load ()
     game.state["level"] = GameState (level_start_update, level_start_draw)
     game.state["playing"] = GameState (playing_update, playing_draw, playing_key)
     game.state["win"] = GameState (nil, win_draw)
+
+    font = {}
+    font["small"] = love.graphics.newFont ("DejaVuSans.ttf", 20);
+    font["med"]   = love.graphics.newFont ("DejaVuSans.ttf", 32);
+    font["large"] = love.graphics.newFont ("DejaVuSans.ttf", 45);
 
     level_name_display = 3
     current_state = "start"
