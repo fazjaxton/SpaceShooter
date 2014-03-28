@@ -1,12 +1,16 @@
 Player = class ()
 function Player:__init()
-    self.x = win_width / 2
-    self.y = win_height / 2
+    self.set_start_pos = function (self)
+        self.x = win_width / 2
+        self.y = win_height / 2
 
-    self.velocity = {}
-    self.velocity.speed = 0
-    self.velocity.angle = 0
-    self.angle = self.velocity.angle
+        self.velocity = {}
+        self.velocity.speed = 0
+        self.velocity.angle = 0
+        self.angle = self.velocity.angle
+    end
+
+    self:set_start_pos ()
 
     self.accel = 500
     self.min_speed = 0
