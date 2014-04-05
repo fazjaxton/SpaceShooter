@@ -1,20 +1,17 @@
 Shot = class ()
-function Shot:__init(ship, target)
+function Shot:__init(weapon)
     self.dist = 0
-    self.target = target
     self.accel = 0
     self.min_speed = 0
 
     self.velocity = {}
 
-    if (target) then
-        self.velocity.angle = angle_between (ship, target)
-    else
-        self.velocity.angle = ship.angle
-    end
+    self.velocity.angle = weapon.owner.angle + weapon.angle
 
-    self.x = ship.x + ship.rad * math.cos (self.velocity.angle)
-    self.y = ship.y + ship.rad * math.sin (self.velocity.angle)
+    local pos = weapon.owner.angle + weapon.mount_pos
+
+    self.x = weapon.owner.x + weapon.owner.rad * math.cos (pos)
+    self.y = weapon.owner.y + weapon.owner.rad * math.sin (pos)
 
     self.update = function (self, dt)
         update_pos (self, dt)
@@ -32,8 +29,8 @@ end
 
 
 CannonShot = Shot:extends ()
-function CannonShot:__init (ship, target)
-    CannonShot.super.__init(self, ship, target)
+function CannonShot:__init (weapon)
+    CannonShot.super.__init(self, weapon)
 
     self.velocity.speed = 100
 
@@ -47,21 +44,41 @@ function CannonShot:__init (ship, target)
     end
 end
 
+function update_target (shot)
+    local best_dist
+    local target
+
+    for harms in pairs(shot.harms) do
+        local dist = get_dist (shot, harms)
+        if (not best_dist or dist < best_dist) then
+            best_dist = dist
+            target = harms
+        end
+    end
+
+    return target
+end
+
 MissileShot = Shot:extends ()
-function MissileShot:__init (ship, target)
-    MissileShot.super.__init(self, ship, target)
+function MissileShot:__init (weapon)
+    MissileShot.super.__init(self, weapon)
 
     self.velocity.speed = 200
     self.accel = 300
     self.max_speed = 200
+    self.guidance_dist = 50
+    self.weapon = weapon
 
     self.rad = shot_rad
     self.bounds = {}
     self.bounds.rad = shot_rad
 
     self.update = function (self, dt)
-        self.angle = angle_between (self, self.target)
-        accelerate (self, dt)
+        if (self.dist > self.guidance_dist) then
+            self.target = update_target (self)
+            self.angle = angle_between (self, self.target)
+            accelerate (self, dt)
+        end
         check_limits (self)
         update_pos (self, dt)
     end
@@ -72,9 +89,17 @@ function MissileShot:__init (ship, target)
     end
 end
 
+PlayerMissileShot = MissileShot:extends ()
+function PlayerMissileShot:__init (weapon)
+    PlayerMissileShot.super.__init(self, weapon)
+
+    self.harms = enemies
+end
+
+
 EnemyMissileShot = MissileShot:extends ()
-function EnemyMissileShot:__init (ship, target)
-    EnemyMissileShot.super.__init(self, ship, target)
+function EnemyMissileShot:__init (weapon)
+    EnemyMissileShot.super.__init(self, weapon)
 
     self.harms = {}
     self.harms[rocket] = true
@@ -82,8 +107,8 @@ end
 
 
 PlayerCannonShot = CannonShot:extends ()
-function PlayerCannonShot:__init (ship, target)
-    PlayerCannonShot.super.__init(self, ship, target)
+function PlayerCannonShot:__init (weapon)
+    PlayerCannonShot.super.__init(self, weapon)
 
     self.velocity.speed = shot_speed
 
@@ -92,8 +117,8 @@ end
 
 
 EnemyCannonShot = CannonShot:extends ()
-function EnemyCannonShot:__init (ship, target)
-    EnemyCannonShot.super.__init(self, ship, target)
+function EnemyCannonShot:__init (weapon)
+    EnemyCannonShot.super.__init(self, weapon)
 
     self.harms = {}
     self.harms[rocket] = true
@@ -104,6 +129,8 @@ Weapon = class ()
 function Weapon:__init(owner)
     self.fire_time = game_time
     self.owner = owner
+    self.angle = owner.angle
+    self.mount_pos = owner.angle
 
     self.fire = function ()
         -- Don't fire faster than max rate
@@ -111,7 +138,7 @@ function Weapon:__init(owner)
             return
         end
 
-        local shot = self.shoot (self.owner, self:get_target())
+        local shot = self.shoot (self)
 
         shots[shot] = true
         self.fire_time = game_time
@@ -129,14 +156,21 @@ function Missile:__init(owner)
 end
 
 PlayerCannon = Cannon:extends ()
-function PlayerCannon:__init(owner)
+function PlayerCannon:__init(owner, pos, angle)
     PlayerCannon.super.__init(self, owner)
     self.shoot = PlayerCannonShot
     self.fire_rate = 5
+    self.angle = angle
+    self.mount_pos = pos
+end
 
-    self.get_target = function (self)
-        return nil
-    end
+PlayerMissile = Missile:extends ()
+function PlayerMissile:__init(owner, pos, angle)
+    PlayerMissile.super.__init(self, owner)
+    self.shoot = PlayerMissileShot
+    self.fire_rate = 2
+    self.angle = angle
+    self.mount_pos = pos
 end
 
 EnemyCannon = Cannon:extends ()
@@ -144,10 +178,6 @@ function EnemyCannon:__init(owner)
     EnemyCannon.super.__init(self, owner)
     self.shoot = EnemyCannonShot
     self.fire_rate = 0.5
-
-    self.get_target = function (self)
-        return rocket
-    end
 end
 
 EnemyMissile = Missile:extends ()
@@ -155,8 +185,4 @@ function EnemyMissile:__init(owner)
     EnemyMissile.super.__init(self, owner)
     self.shoot = EnemyMissileShot
     self.fire_rate = 0.25
-
-    self.get_target = function (self)
-        return rocket
-    end
 end
