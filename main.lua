@@ -69,6 +69,7 @@ end
 
 
 GameState = class ()
+GameState.__name = "GameState"
 function GameState:__init(update, draw, key, mouse)
     self.update = update
     self.draw = draw

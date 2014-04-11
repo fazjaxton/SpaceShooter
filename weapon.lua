@@ -1,4 +1,5 @@
 Shot = class ()
+Shot.__name = "Shot"
 function Shot:__init(weapon)
     self.dist = 0
     self.accel = 0
@@ -29,6 +30,7 @@ end
 
 
 CannonShot = Shot:extends ()
+CannonShot.__name = "CannonShot"
 function CannonShot:__init (weapon)
     CannonShot.super.__init(self, weapon)
 
@@ -60,6 +62,7 @@ function update_target (shot)
 end
 
 MissileShot = Shot:extends ()
+MissileShot.__name = "MissileShot"
 function MissileShot:__init (weapon)
     MissileShot.super.__init(self, weapon)
 
@@ -90,6 +93,7 @@ function MissileShot:__init (weapon)
 end
 
 PlayerMissileShot = MissileShot:extends ()
+PlayerMissileShot.__name = "PlayerMissileShot"
 function PlayerMissileShot:__init (weapon)
     PlayerMissileShot.super.__init(self, weapon)
 
@@ -98,6 +102,7 @@ end
 
 
 EnemyMissileShot = MissileShot:extends ()
+EnemyMissileShot.__name = "EnemyMissileShot"
 function EnemyMissileShot:__init (weapon)
     EnemyMissileShot.super.__init(self, weapon)
 
@@ -107,6 +112,7 @@ end
 
 
 PlayerCannonShot = CannonShot:extends ()
+PlayerCannonShot.__name = "PlayerCannonShot"
 function PlayerCannonShot:__init (weapon)
     PlayerCannonShot.super.__init(self, weapon)
 
@@ -117,6 +123,7 @@ end
 
 
 EnemyCannonShot = CannonShot:extends ()
+EnemyCannonShot.__name = "EnemyCannonShot"
 function EnemyCannonShot:__init (weapon)
     EnemyCannonShot.super.__init(self, weapon)
 
@@ -126,6 +133,7 @@ end
 
 
 Weapon = class ()
+Weapon.__name = "Weapon"
 function Weapon:__init(owner)
     self.fire_time = game_time
     self.owner = owner
@@ -146,16 +154,19 @@ function Weapon:__init(owner)
 end
 
 Cannon = Weapon:extends ()
+Cannon.__name = "Cannon"
 function Cannon:__init(owner)
     Cannon.super.__init(self, owner)
 end
 
 Missile = Weapon:extends ()
+Missile.__name = "Missile"
 function Missile:__init(owner)
     Missile.super.__init(self, owner)
 end
 
 PlayerCannon = Cannon:extends ()
+PlayerCannon.__name = "PlayerCannon"
 function PlayerCannon:__init(owner, pos, angle)
     PlayerCannon.super.__init(self, owner)
     self.shoot = PlayerCannonShot
@@ -165,6 +176,7 @@ function PlayerCannon:__init(owner, pos, angle)
 end
 
 PlayerMissile = Missile:extends ()
+PlayerMissile.__name = "PlayerMissile"
 function PlayerMissile:__init(owner, pos, angle)
     PlayerMissile.super.__init(self, owner)
     self.shoot = PlayerMissileShot
@@ -174,6 +186,7 @@ function PlayerMissile:__init(owner, pos, angle)
 end
 
 EnemyCannon = Cannon:extends ()
+EnemyCannon.__name = "EnemyCannon"
 function EnemyCannon:__init(owner)
     EnemyCannon.super.__init(self, owner)
     self.shoot = EnemyCannonShot
@@ -181,6 +194,7 @@ function EnemyCannon:__init(owner)
 end
 
 EnemyMissile = Missile:extends ()
+EnemyMissile.__name = "EnemyMissile"
 function EnemyMissile:__init(owner)
     EnemyMissile.super.__init(self, owner)
     self.shoot = EnemyMissileShot

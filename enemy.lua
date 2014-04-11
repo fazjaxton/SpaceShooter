@@ -1,4 +1,5 @@
 local Enemy = class {}
+Enemy.__name = "Enemy"
 function Enemy:__init()
     self.x = win_width
     self.y = math.random () * win_height
@@ -33,6 +34,7 @@ function Enemy:__init()
 end
 
 Drone = Enemy:extends()
+Drone.__name = "Drone"
 function Drone:__init()
     Drone.super.__init(self)
     self.velocity.speed = 100
@@ -46,6 +48,7 @@ function Drone:__init()
 end
 
 Seeker = Enemy:extends()
+Seeker.__name = "Seeker"
 function Seeker:__init()
     Seeker.super.__init(self)
     self.velocity.speed = 100
@@ -67,6 +70,7 @@ function Seeker:__init()
 end
 
 CannonDrone = Drone:extends()
+CannonDrone.__name = "CannonDrone"
 function CannonDrone:__init()
     CannonDrone.super.__init(self)
 
@@ -74,6 +78,7 @@ function CannonDrone:__init()
 end
 
 MissileDrone = Drone:extends()
+MissileDrone.__name = "MissileDrone"
 function MissileDrone:__init()
     MissileDrone.super.__init(self)
 

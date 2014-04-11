@@ -1,4 +1,5 @@
 Level = class ()
+Level.__name = "Level"
 
 function release_enemy (self, game_time)
     if (game_time - self.last_enemy_time >= self.enemy_timing) then
@@ -36,6 +37,7 @@ end
 
 
 Level1 = Level:extends ()
+Level1.__name = "Level1"
 function Level1:__init()
     Level1.super.__init(self)
 
@@ -45,6 +47,7 @@ function Level1:__init()
 end
 
 Level2 = Level:extends ()
+Level2.__name = "Level2"
 function Level2:__init()
     Level2.super.__init(self)
 

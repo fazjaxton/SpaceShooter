@@ -1,4 +1,5 @@
 Player = class ()
+Player.__name = "Player"
 function Player:__init()
     self.set_start_pos = function (self)
         self.x = win_width / 2
