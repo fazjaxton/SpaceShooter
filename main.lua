@@ -4,6 +4,7 @@ require 'player'
 require 'level'
 require 'weapon'
 require 'enemy'
+require 'powerup'
 
 
 function angle_between (o1, o2)
@@ -150,10 +151,17 @@ function check_collisions ()
         end
     end
 
+    for powerup in pairs(powerups) do
+        if (collide (rocket, powerup)) then
+            rocket:hit_with (powerup)
+            powerups[powerup] = nil
+        end
+    end
+
     for enemy in pairs(enemies) do
         if (collide (rocket, enemy)) then
-            game_running = false
-            draw_player = false
+            rocket:hit_with (enemy)
+            enemy:hit_with (rocket)
         end
     end
 end
@@ -174,6 +182,13 @@ end
 function update_shots (dt)
     for shot in pairs(shots) do
         shot:update (dt)
+    end
+end
+
+
+function update_powerups (dt)
+    for powerup in pairs (powerups) do
+        powerup:update (dt)
     end
 end
 
@@ -237,6 +252,7 @@ function playing_update (game_time, dt)
 
     update_enemies (dt)
     update_shots (dt)
+    update_powerups (dt)
 
     check_collisions ()
 
@@ -267,8 +283,6 @@ function love.load ()
 
     level_name_display = 3
     current_state = "start"
-    game_running = true
-    draw_player = true
 
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
@@ -294,6 +308,7 @@ function love.load ()
 
     enemies = {}
     shots = {}
+    powerups = {}
 end
 
 
@@ -325,10 +340,18 @@ function draw_shots ()
 end
 
 
+function draw_powerups ()
+    for powerup in pairs (powerups) do
+        powerup:draw ()
+    end
+end
+
+
 function playing_draw ()
     draw_rocket ()
     draw_enemies ()
     draw_shots ()
+    draw_powerups ()
 end
 
 function love.draw ()

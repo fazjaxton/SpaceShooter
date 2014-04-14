@@ -141,8 +141,10 @@ function Weapon:__init(owner)
     self.mount_pos = owner.angle
 
     self.fire = function ()
+        local rate = self.fire_rate * owner.fire_multiplier
+
         -- Don't fire faster than max rate
-        if (game_time < self.fire_time + 1 / self.fire_rate) then
+        if (game_time < self.fire_time + 1 / rate) then
             return
         end
 

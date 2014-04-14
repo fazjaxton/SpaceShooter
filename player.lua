@@ -11,29 +11,37 @@ function Player:__init()
         self.angle = self.velocity.angle
     end
 
-    self:set_start_pos ()
+    self.set_defaults = function (self)
+        self.accel = 500
+        self.min_speed = 0
+        self.max_speed = 500
 
-    self.accel = 500
-    self.min_speed = 0
-    self.max_speed = 500
+        self.spin_max = 6
+        -- Radians per second per second
+        self.spin_accel = 25
+
+        self.weapons = {}
+        self.weapons[PlayerCannon (self, 0, 0)] = true
+
+        self.powerups = {}
+
+        self.fire_multiplier = 1
+    end
+
+    self:set_start_pos ()
+    self:set_defaults ()
 
     self.rad = rocket_rad
 
     self.spin_rps = 0
-    self.spin_max = 6
-    -- Radians per second per second
-    self.spin_accel = 25
 
     self.bounds = {}
     self.bounds.rad = rocket_rad * 0.6
 
-    self.weapons = {}
-    self.weapons[PlayerCannon (self)] = true
+
+    self.powerup_count = 0
 
     self.update = function (self, dt)
-        if (not draw_player) then
-            return
-        end
         update_pos (self, dt)
         wrap_edges (self)
         check_limits (self)
@@ -56,7 +64,46 @@ function Player:__init()
         love.graphics.circle ("line", rocket.x, rocket.y, rocket.bounds.rad)
     end
 
-    self.hit_with = function (self, shot)
+    self.add_powerup = function (self, powerup)
+        self.powerups[powerup] = true
+        self.powerup_count = self.powerup_count + 1
+        powerup:apply (self)
+        print ("Powerup added")
+    end
+
+    self.remove_powerup = function (self, powerup)
+        -- Remove powerup from ship
+        self.powerups[powerup] = nil
+        self.powerup_count = self.powerup_count - 1
+
+        -- Restore ship to defaults
+        self:set_defaults ()
+
+        print ("Powerup removed")
+
+        -- Apply all remaining powerups
+        for p in pairs (self.powerups) do
+            p:apply (self)
+        end
+    end
+
+    self.hit_with = function (self, object)
+        if (object:is (Shot) or object:is (Enemy)) then
+            local lost = nil
+            local count = 0
+
+            if (self.powerup_count > 0) then
+                local which = math.floor (math.random () * self.powerup_count)
+                for powerup in pairs(self.powerups) do
+                    if (count == which) then
+                        self:remove_powerup (powerup)
+                        break
+                    end
+                end
+            end
+        elseif (object:is (Powerup)) then
+            self:add_powerup (object)
+        end
     end
 
     self.accelerate = accelerate

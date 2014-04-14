@@ -1,4 +1,4 @@
-local Enemy = class {}
+Enemy = class {}
 Enemy.__name = "Enemy"
 function Enemy:__init()
     self.x = win_width
@@ -19,9 +19,26 @@ function Enemy:__init()
 
     self.weapons = {}
 
-    self.hit_with = function (self, shot)
+    self.fire_multiplier = 1
+
+    self.destroyed = function (self)
+        if (self.powerup) then
+            self.powerup.x = self.x
+            self.powerup.y = self.y
+            self.powerup.velocity = {}
+            self.powerup.velocity.speed = self.velocity.speed
+            self.powerup.velocity.angle = self.velocity.angle
+            powerups[self.powerup] = true
+        end
+
         enemies[self] = nil
         enemy_count = enemy_count -1
+    end
+
+    self.hit_with = function (self, object)
+        if (object:is (Player) or object:is (Shot)) then
+            self:destroyed ()
+        end
     end
 
     self.update = function (self, dt)
@@ -85,12 +102,12 @@ function MissileDrone:__init()
     self.weapons[EnemyMissile (self)] = true
 end
 
-local generator = {}
-generator["drone"] = Drone
-generator["seeker"] = Seeker
-generator["cannondrone"] = CannonDrone
-generator["missiledrone"] = MissileDrone
+local enemy_generator = {}
+enemy_generator["drone"] = Drone
+enemy_generator["seeker"] = Seeker
+enemy_generator["cannondrone"] = CannonDrone
+enemy_generator["missiledrone"] = MissileDrone
 
 function generate_enemy (type)
-    return generator[type] ()
+    return enemy_generator[type] ()
 end

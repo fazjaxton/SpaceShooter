@@ -4,8 +4,12 @@ Level.__name = "Level"
 function release_enemy (self, game_time)
     if (game_time - self.last_enemy_time >= self.enemy_timing) then
         if (self.enemy_index <= #self.enemy_order) then
-            local enemy_type = self.enemy_order[self.enemy_index]
-            local enemy = generate_enemy (enemy_type)
+            local next_enemy = self.enemy_order[self.enemy_index]
+            local enemy = generate_enemy (next_enemy.type)
+
+            if (next_enemy.powerup) then
+                enemy.powerup = generate_powerup (next_enemy.powerup)
+            end
 
             enemies[enemy] = true
             enemy_count = enemy_count + 1
@@ -42,7 +46,9 @@ function Level1:__init()
     Level1.super.__init(self)
 
     self.name = "Level 1"
-    self.enemy_order = { "cannondrone" }
+    self.enemy_order = { { type = "missiledrone", powerup = "FastFire" },
+                         { type = "missiledrone", powerup = "FastFire" }
+                       }
     self.enemy_timing = 1
 end
 
@@ -52,7 +58,17 @@ function Level2:__init()
     Level2.super.__init(self)
 
     self.name = "Level 2"
-    self.enemy_order = { "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone", "missiledrone" }
+    self.enemy_order = { { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" },
+                         { type = "missiledrone" }
+                       }
     self.enemy_timing = 0.25
 end
 
