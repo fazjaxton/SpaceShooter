@@ -28,7 +28,7 @@ function Level:__init()
     -- Clear any existing shots
     shots = {}
 
-    rocket:set_start_pos ()
+    player:set_start_pos ()
 
     self.update = release_enemy
 

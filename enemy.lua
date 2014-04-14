@@ -69,11 +69,11 @@ Seeker.__name = "Seeker"
 function Seeker:__init()
     Seeker.super.__init(self)
     self.velocity.speed = 100
-    self.velocity.angle = angle_between (self, rocket)
+    self.velocity.angle = angle_between (self, player)
     self.accel = 500
 
     self.update = function (self, dt)
-        self.angle = angle_between (self, rocket)
+        self.angle = angle_between (self, player)
         accelerate (self, dt)
         check_limits (self)
         update_pos (self, dt)

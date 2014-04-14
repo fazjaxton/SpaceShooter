@@ -107,7 +107,7 @@ function EnemyMissileShot:__init (weapon)
     EnemyMissileShot.super.__init(self, weapon)
 
     self.harms = {}
-    self.harms[rocket] = true
+    self.harms[player] = true
 end
 
 
@@ -128,7 +128,7 @@ function EnemyCannonShot:__init (weapon)
     EnemyCannonShot.super.__init(self, weapon)
 
     self.harms = {}
-    self.harms[rocket] = true
+    self.harms[player] = true
 end
 
 

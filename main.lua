@@ -84,7 +84,7 @@ end
 
 function playing_key (key)
     if (key == " ") then
-        for weapon in pairs (rocket.weapons) do
+        for weapon in pairs (player.weapons) do
             weapon.fire ()
         end
     end
@@ -107,17 +107,17 @@ end
 
 function handle_inputs (dt)
     if (love.keyboard.isDown ("a") or love.keyboard.isDown ("left")) then
-        rocket:spin (-1, dt)
+        player:spin (-1, dt)
     elseif (love.keyboard.isDown ("d") or love.keyboard.isDown ("right")) then
-        rocket:spin (1, dt)
+        player:spin (1, dt)
     else
-        rocket.spin_rps = 0
+        player.spin_rps = 0
     end
 
     if (love.keyboard.isDown ("s") or love.keyboard.isDown ("down")) then
-        rocket:accelerate (-dt)
+        player:accelerate (-dt)
     elseif (love.keyboard.isDown ("w") or love.keyboard.isDown ("up")) then
-        rocket:accelerate (dt)
+        player:accelerate (dt)
     end
 
     if (love.keyboard.isDown (" ")) then
@@ -152,23 +152,23 @@ function check_collisions ()
     end
 
     for powerup in pairs(powerups) do
-        if (collide (rocket, powerup)) then
-            rocket:hit_with (powerup)
+        if (collide (player, powerup)) then
+            player:hit_with (powerup)
             powerups[powerup] = nil
         end
     end
 
     for enemy in pairs(enemies) do
-        if (collide (rocket, enemy)) then
-            rocket:hit_with (enemy)
-            enemy:hit_with (rocket)
+        if (collide (player, enemy)) then
+            player:hit_with (enemy)
+            enemy:hit_with (player)
         end
     end
 end
 
 
-function update_rocket_pos (dt)
-    rocket:update (dt)
+function update_player_pos (dt)
+    player:update (dt)
 end
 
 
@@ -248,7 +248,7 @@ function playing_update (game_time, dt)
     level:update (game_time)
 
     handle_inputs (dt)
-    update_rocket_pos (dt)
+    update_player_pos (dt)
 
     update_enemies (dt)
     update_shots (dt)
@@ -287,7 +287,7 @@ function love.load ()
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
 
-    rocket_rad = 25
+    player_rad = 25
 
     shot_speed = 1000
     shot_rad = 4
@@ -301,7 +301,7 @@ function love.load ()
     fire_rate = 5
     shot_range = win_height
 
-    rocket = Player ()
+    player = Player ()
 
     -- Index incremented to 1 in start_next_level
     game_level_index = 0
@@ -321,8 +321,8 @@ function love.update (dt)
 end
 
 
-function draw_rocket ()
-    rocket:draw ()
+function draw_player ()
+    player:draw ()
 end
 
 
@@ -348,7 +348,7 @@ end
 
 
 function playing_draw ()
-    draw_rocket ()
+    draw_player ()
     draw_enemies ()
     draw_shots ()
     draw_powerups ()

@@ -31,12 +31,12 @@ function Player:__init()
     self:set_start_pos ()
     self:set_defaults ()
 
-    self.rad = rocket_rad
+    self.rad = player_rad
 
     self.spin_rps = 0
 
     self.bounds = {}
-    self.bounds.rad = rocket_rad * 0.6
+    self.bounds.rad = player_rad * 0.6
 
 
     self.powerup_count = 0
@@ -51,17 +51,17 @@ function Player:__init()
         local polygon = {}
 
         love.graphics.setColor (255, 255, 255, 255)
-        polygon[1] = rocket.x + rocket.rad * math.cos (rocket.angle + 0)
-        polygon[2] = rocket.y + rocket.rad * math.sin (rocket.angle + 0)
+        polygon[1] = player.x + player.rad * math.cos (player.angle + 0)
+        polygon[2] = player.y + player.rad * math.sin (player.angle + 0)
 
-        polygon[3] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 5 / 6)
-        polygon[4] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 5 / 6)
+        polygon[3] = player.x + player.rad * math.cos (player.angle + math.pi * 5 / 6)
+        polygon[4] = player.y + player.rad * math.sin (player.angle + math.pi * 5 / 6)
 
-        polygon[5] = rocket.x + rocket.rad * math.cos (rocket.angle + math.pi * 7 / 6)
-        polygon[6] = rocket.y + rocket.rad * math.sin (rocket.angle + math.pi * 7 / 6)
+        polygon[5] = player.x + player.rad * math.cos (player.angle + math.pi * 7 / 6)
+        polygon[6] = player.y + player.rad * math.sin (player.angle + math.pi * 7 / 6)
 
         love.graphics.polygon ("fill", polygon)
-        love.graphics.circle ("line", rocket.x, rocket.y, rocket.bounds.rad)
+        love.graphics.circle ("line", player.x, player.y, player.bounds.rad)
     end
 
     self.add_powerup = function (self, powerup)
