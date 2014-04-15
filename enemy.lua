@@ -29,6 +29,7 @@ function Enemy:__init()
             self.powerup.velocity.speed = self.velocity.speed
             self.powerup.velocity.angle = self.velocity.angle
             powerups[self.powerup] = true
+            powerup_count = powerup_count + 1
         end
 
         enemies[self] = nil

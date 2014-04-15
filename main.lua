@@ -155,6 +155,7 @@ function check_collisions ()
         if (collide (player, powerup)) then
             player:hit_with (powerup)
             powerups[powerup] = nil
+            powerup_count = powerup_count - 1
         end
     end
 

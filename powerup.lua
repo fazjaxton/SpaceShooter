@@ -6,12 +6,24 @@ function Powerup:__init()
     self.bounds = {}
     self.bounds.rad = self.rad
 
+    self.dist = 0
+    self.max_dist = 1000
+
     self.apply = function (self, player)
         self.orig_value = player.value
         player[self.attribute] = self.value
     end
 
+    self.destroy = function (self)
+        powerups[self] = nil
+        powerup_count = powerup_count - 1
+    end
+
     self.update = function (self, dt)
+        if (self.max_dist and self.dist > self.max_dist) then
+            self:destroy ()
+        end
+
         update_pos (self, dt)
         wrap_edges (self)
     end
