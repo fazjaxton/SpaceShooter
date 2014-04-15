@@ -76,11 +76,21 @@ function MissileShot:__init (weapon)
     self.bounds = {}
     self.bounds.rad = shot_rad
 
+    self.destroy = function (self, dt)
+        shots[self] = nil
+    end
+
     self.update = function (self, dt)
-        if (self.dist > self.guidance_dist) then
+        if (self.max_dist and self.dist > self.max_dist) then
+            self:destroy ()
+        elseif (self.dist > self.guidance_dist) then
             self.target = update_target (self)
-            self.angle = angle_between (self, self.target)
-            accelerate (self, dt)
+            if (not self.target) then
+                self:destroy ()
+            else
+                self.angle = angle_between (self, self.target)
+                accelerate (self, dt)
+            end
         end
         check_limits (self)
         update_pos (self, dt)
@@ -98,6 +108,8 @@ function PlayerMissileShot:__init (weapon)
     PlayerMissileShot.super.__init(self, weapon)
 
     self.harms = enemies
+
+    self.max_dist = 600
 end
 
 
@@ -108,6 +120,8 @@ function EnemyMissileShot:__init (weapon)
 
     self.harms = {}
     self.harms[player] = true
+
+    self.max_dist = 600
 end
 
 
@@ -182,7 +196,7 @@ PlayerMissile.__name = "PlayerMissile"
 function PlayerMissile:__init(owner, pos, angle)
     PlayerMissile.super.__init(self, owner)
     self.shoot = PlayerMissileShot
-    self.fire_rate = 2
+    self.fire_rate = 0.75
     self.angle = angle
     self.mount_pos = pos
 end
