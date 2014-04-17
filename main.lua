@@ -5,6 +5,7 @@ require 'level'
 require 'weapon'
 require 'enemy'
 require 'powerup'
+require 'gamestate'
 
 
 function angle_between (o1, o2)
@@ -69,27 +70,6 @@ function accelerate (self, dt)
 end
 
 
-GameState = class ()
-GameState.__name = "GameState"
-function GameState:__init(update, draw, key, mouse)
-    self.update = update
-    self.draw = draw
-    self.keypressed = key
-    self.mousepressed = mouse
-end
-
-function start_screen_key (key)
-    start_next_level ()
-end
-
-function playing_key (key)
-    if (key == " ") then
-        for weapon in pairs (player.weapons) do
-            weapon.fire ()
-        end
-    end
-end
-
 function love.keypressed (key)
     if (key == "?") then
     end
@@ -99,29 +79,10 @@ function love.keypressed (key)
     end
 end
 
+
 function love.mousepressed (x, y, button)
     if (game.state[current_state].mousepressed) then
         game.state[current_state].mousepressed (x, y. button)
-    end
-end
-
-function handle_inputs (dt)
-    if (love.keyboard.isDown ("a") or love.keyboard.isDown ("left")) then
-        player:spin (-1, dt)
-    elseif (love.keyboard.isDown ("d") or love.keyboard.isDown ("right")) then
-        player:spin (1, dt)
-    else
-        player.spin_rps = 0
-    end
-
-    if (love.keyboard.isDown ("s") or love.keyboard.isDown ("down")) then
-        player:accelerate (-dt)
-    elseif (love.keyboard.isDown ("w") or love.keyboard.isDown ("up")) then
-        player:accelerate (dt)
-    end
-
-    if (love.keyboard.isDown (" ")) then
-        playing_key (" ")
     end
 end
 
@@ -215,67 +176,9 @@ function print_centered (text, sizedesc)
 end
 
 
-function start_screen_draw (game_time, dt)
-    print_centered ("Press a key to Start")
-end
-
-
-function level_start_draw ()
-    print_centered (level.name)
-end
-
-
-function level_start_update (game_time, dt)
-    if (not level_name_display_start) then
-        level_name_display_start = game_time
-    elseif (game_time - level_name_display_start >= level_name_display) then
-        level_name_display_start = nil
-        current_state = "playing"
-    end
-end
-
-
-function start_next_level ()
-    game_level_index = game_level_index + 1
-    if (game_level_index > #game_levels) then
-        current_state = "win"
-    else
-        level = game_levels[game_level_index] ()
-        current_state = "level"
-    end
-end
-
-function playing_update (game_time, dt)
-    level:update (game_time)
-
-    handle_inputs (dt)
-    update_player_pos (dt)
-
-    update_enemies (dt)
-    update_shots (dt)
-    update_powerups (dt)
-
-    check_collisions ()
-
-    if (level:complete ()) then
-        start_next_level ()
-    end
-end
-
-
-function win_draw ()
-    print_centered ("You Win!")
-end
-
-
 function love.load ()
     game = {}
-    game.state = {}
-
-    game.state["start"] = GameState (nil, start_screen_draw, start_screen_key)
-    game.state["level"] = GameState (level_start_update, level_start_draw)
-    game.state["playing"] = GameState (playing_update, playing_draw, playing_key)
-    game.state["win"] = GameState (nil, win_draw)
+    game.state = get_game_states ()
 
     font = {}
     font["small"] = love.graphics.newFont ("DejaVuSans.ttf", 20);
@@ -313,39 +216,6 @@ function love.update (dt)
     end
 end
 
-
-function draw_player ()
-    player:draw ()
-end
-
-
-function draw_enemies ()
-    for enemy in pairs (enemies) do
-        enemy:draw ()
-    end
-end
-
-
-function draw_shots ()
-    for shot in pairs(shots) do
-        shot:draw ()
-    end
-end
-
-
-function draw_powerups ()
-    for powerup in pairs (powerups) do
-        powerup:draw ()
-    end
-end
-
-
-function playing_draw ()
-    draw_player ()
-    draw_enemies ()
-    draw_shots ()
-    draw_powerups ()
-end
 
 function love.draw ()
     game.state[current_state].draw ()
