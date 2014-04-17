@@ -288,18 +288,10 @@ function love.load ()
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
 
-    player_rad = 25
-
-    shot_speed = 1000
-    shot_rad = 4
-    enemy_rad = 15
-
     game_time = 0
     fire_time = 0
 
     which_enemy = 1
-    enemy_interval = 2
-    fire_rate = 5
     shot_range = win_height
 
     player = Player ()

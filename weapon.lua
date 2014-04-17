@@ -36,9 +36,9 @@ function CannonShot:__init (weapon)
 
     self.velocity.speed = 100
 
-    self.rad = shot_rad
+    self.rad = 4
     self.bounds = {}
-    self.bounds.rad = shot_rad
+    self.bounds.rad = self.rad
 
     self.draw = function (self)
         love.graphics.setColor (0, 255, 0, 255)
@@ -72,9 +72,9 @@ function MissileShot:__init (weapon)
     self.guidance_dist = 50
     self.weapon = weapon
 
-    self.rad = shot_rad
+    self.rad = 4
     self.bounds = {}
-    self.bounds.rad = shot_rad
+    self.bounds.rad = self.rad
 
     self.destroy = function (self, dt)
         shots[self] = nil
@@ -130,7 +130,7 @@ PlayerCannonShot.__name = "PlayerCannonShot"
 function PlayerCannonShot:__init (weapon)
     PlayerCannonShot.super.__init(self, weapon)
 
-    self.velocity.speed = shot_speed
+    self.velocity.speed = 1000
 
     self.harms = enemies
 end

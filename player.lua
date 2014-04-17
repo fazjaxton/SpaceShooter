@@ -31,12 +31,12 @@ function Player:__init()
     self:set_start_pos ()
     self:set_defaults ()
 
-    self.rad = player_rad
+    self.rad = 25
 
     self.spin_rps = 0
 
     self.bounds = {}
-    self.bounds.rad = player_rad * 0.6
+    self.bounds.rad = self.rad * 0.6
 
 
     self.powerup_count = 0

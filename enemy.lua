@@ -7,12 +7,12 @@ function Enemy:__init()
     self.velocity = {}
     self.velocity.speed = 0
     self.velocity.angle = 0
-    self.rad = enemy_rad
+    self.rad = 15
 
     self.angle = self.velocity.angle
 
     self.bounds = {}
-    self.bounds.rad = enemy_rad
+    self.bounds.rad = self.rad
     self.max_speed = 100
     self.min_speed = 0
     self.drop = nil
