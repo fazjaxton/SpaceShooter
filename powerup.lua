@@ -29,8 +29,7 @@ function Powerup:__init()
     end
 
     self.draw = function (self)
-        love.graphics.setColor (unpack(self.color))
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
+        icon_draw (self, icons.powerup)
     end
 end
 

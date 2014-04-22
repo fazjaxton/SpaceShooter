@@ -48,20 +48,7 @@ function Player:__init()
     end
 
     self.draw = function (self)
-        local polygon = {}
-
-        love.graphics.setColor (255, 255, 255, 255)
-        polygon[1] = player.x + player.rad * math.cos (player.angle + 0)
-        polygon[2] = player.y + player.rad * math.sin (player.angle + 0)
-
-        polygon[3] = player.x + player.rad * math.cos (player.angle + math.pi * 5 / 6)
-        polygon[4] = player.y + player.rad * math.sin (player.angle + math.pi * 5 / 6)
-
-        polygon[5] = player.x + player.rad * math.cos (player.angle + math.pi * 7 / 6)
-        polygon[6] = player.y + player.rad * math.sin (player.angle + math.pi * 7 / 6)
-
-        love.graphics.polygon ("fill", polygon)
-        love.graphics.circle ("line", player.x, player.y, player.bounds.rad)
+        icon_draw (self, icons.player)
     end
 
     self.add_powerup = function (self, powerup)

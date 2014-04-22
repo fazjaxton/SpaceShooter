@@ -60,8 +60,7 @@ function Drone:__init()
     self.angle = self.velocity.angle
 
     self.draw = function (self)
-        love.graphics.setColor (255, 150, 150, 255)
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
+        icon_draw (self, icons.enemy2)
     end
 end
 
@@ -82,8 +81,7 @@ function Seeker:__init()
     end
 
     self.draw = function (self)
-        love.graphics.setColor (150, 150, 255, 255)
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
+        icon_draw (self, icons.enemy1)
     end
 end
 

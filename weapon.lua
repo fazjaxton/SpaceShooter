@@ -7,6 +7,7 @@ function Shot:__init(weapon)
 
     self.velocity = {}
 
+    self.angle = weapon.owner.angle
     self.velocity.angle = weapon.owner.angle + weapon.angle
 
     local pos = weapon.owner.angle + weapon.mount_pos
@@ -41,8 +42,7 @@ function CannonShot:__init (weapon)
     self.bounds.rad = self.rad
 
     self.draw = function (self)
-        love.graphics.setColor (0, 255, 0, 255)
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
+        icon_draw (self, icons.shot)
     end
 end
 
@@ -97,8 +97,7 @@ function MissileShot:__init (weapon)
     end
 
     self.draw = function (self)
-        love.graphics.setColor (255, 255, 0, 255)
-        love.graphics.circle ("fill", self.x, self.y, self.rad)
+        icon_draw (self, icons.missile)
     end
 end
 

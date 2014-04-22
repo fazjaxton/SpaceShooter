@@ -176,9 +176,32 @@ function print_centered (text, sizedesc)
 end
 
 
+function icon_draw (entity, icon)
+    love.graphics.setColor (255, 255, 255, 255)
+    love.graphics.draw (icon.img, entity.x, entity.y, entity.angle, 1, 1, icon.w / 2, icon.h / 2)
+end
+
+function icon_load (filename)
+    local icon = {}
+
+    icon.img = love.graphics.newImage (filename)
+    icon.w = icon.img:getWidth ()
+    icon.h = icon.img:getHeight ()
+
+    return icon
+end
+
 function love.load ()
     game = {}
     game.state = get_game_states ()
+
+    icons = {}
+    icons.player = icon_load ("Assets/player.png")
+    icons.shot = icon_load ("Assets/shot.png")
+    icons.missile = icon_load ("Assets/missile.png")
+    icons.powerup = icon_load ("Assets/powerup-green.png")
+    icons.enemy1 = icon_load ("Assets/enemy1.png")
+    icons.enemy2 = icon_load ("Assets/enemy2.png")
 
     font = {}
     font["small"] = love.graphics.newFont ("DejaVuSans.ttf", 20);
