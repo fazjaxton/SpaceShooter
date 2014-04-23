@@ -67,7 +67,7 @@ function MissileShot:__init (weapon)
     MissileShot.super.__init(self, weapon)
 
     self.velocity.speed = 200
-    self.accel = 300
+    self.accel = 600
     self.max_speed = 200
     self.guidance_dist = 50
     self.weapon = weapon
