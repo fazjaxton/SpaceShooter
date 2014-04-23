@@ -39,7 +39,7 @@ function FastFirePowerup:__init()
     FastFirePowerup.super.__init(self)
 
     self.apply = function (self, player)
-        player.fire_multiplier = 2
+        player.fire_multiplier = player.fire_multiplier * 2
     end
 end
 
