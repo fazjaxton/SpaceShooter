@@ -177,8 +177,16 @@ end
 
 
 function icon_draw (entity, icon)
+    local aspect_w = entity.rad * 2 / icon.img:getWidth ()
+    local aspect_h = entity.rad * 2 / icon.img:getHeight ()
+    local aspect = aspect_w
+
+    if (aspect_h < aspect) then
+        aspect = aspect_h
+    end
+
     love.graphics.setColor (255, 255, 255, 255)
-    love.graphics.draw (icon.img, entity.x, entity.y, entity.angle, 1, 1, icon.w / 2, icon.h / 2)
+    love.graphics.draw (icon.img, entity.x, entity.y, entity.angle, aspect, aspect, icon.w / 2, icon.h / 2)
 end
 
 function icon_load (filename)

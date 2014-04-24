@@ -2,7 +2,7 @@ Powerup = class ()
 Powerup.__name = "Powerup"
 function Powerup:__init()
     self.color = {255, 255, 255, 255}
-    self.rad = 5
+    self.rad = 15
     self.bounds = {}
     self.bounds.rad = self.rad
 

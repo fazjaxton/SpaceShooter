@@ -37,7 +37,7 @@ function CannonShot:__init (weapon)
 
     self.velocity.speed = 100
 
-    self.rad = 4
+    self.rad = 8
     self.bounds = {}
     self.bounds.rad = self.rad
 
@@ -72,9 +72,9 @@ function MissileShot:__init (weapon)
     self.guidance_dist = 50
     self.weapon = weapon
 
-    self.rad = 4
+    self.rad = 12
     self.bounds = {}
-    self.bounds.rad = self.rad
+    self.bounds.rad = 10
 
     self.destroy = function (self, dt)
         shots[self] = nil

@@ -36,7 +36,7 @@ function Player:__init()
     self.spin_rps = 0
 
     self.bounds = {}
-    self.bounds.rad = self.rad * 0.6
+    self.bounds.rad = self.rad
 
 
     self.powerup_count = 0
