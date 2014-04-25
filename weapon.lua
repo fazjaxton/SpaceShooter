@@ -97,7 +97,7 @@ function MissileShot:__init (weapon)
     end
 
     self.draw = function (self)
-        icon_draw (self, icons.missile)
+        icon_draw (self, self.icon)
     end
 end
 
@@ -107,6 +107,7 @@ function PlayerMissileShot:__init (weapon)
     PlayerMissileShot.super.__init(self, weapon)
 
     self.harms = enemies
+    self.icon = icons.player_missile
 
     self.max_dist = 600
 end
@@ -119,6 +120,8 @@ function EnemyMissileShot:__init (weapon)
 
     self.harms = {}
     self.harms[player] = true
+
+    self.icon = icons.enemy_missile
 
     self.max_dist = 600
 end
