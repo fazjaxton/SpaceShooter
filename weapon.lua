@@ -1,3 +1,21 @@
+-- Pivot a weapon within its range to point at a target
+local function target_weapon (weapon, target)
+    local angle
+    local limit = 0.78  -- Pi / 4
+
+    angle = angle_between (weapon.owner, target)
+    angle = angle - weapon.owner.angle
+    angle = reduce_angle (angle)
+    if (angle > limit) then
+        angle = limit
+    elseif (angle < -limit) then
+        angle = -limit
+    end
+
+    weapon.angle = angle
+end
+
+
 Shot = class ()
 Shot.__name = "Shot"
 function Shot:__init(weapon)
@@ -159,6 +177,9 @@ function Weapon:__init(owner)
     -- Angle which the weapon points
     self.angle = 0
 
+    -- Max angle that weapon can pivot to
+    self.angle_limit = 0
+
     -- Angle at which the weapon is mounted on the ship (determines initial
     -- shot position)
     self.mount_pos = 0
@@ -216,6 +237,11 @@ function EnemyCannon:__init(owner)
     EnemyCannon.super.__init(self, owner)
     self.shoot = EnemyCannonShot
     self.fire_rate = 0.5
+    self.angle_limit = 0.78  -- Pi / 4
+
+    self.update = function (self)
+        target_weapon (self, player)
+    end
 end
 
 EnemyMissile = Missile:extends ()

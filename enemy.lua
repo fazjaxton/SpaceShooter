@@ -46,6 +46,9 @@ function Enemy:__init()
         update_pos (self, dt)
         wrap_edges (self)
         for weapon in pairs (self.weapons) do
+            if (weapon.update) then
+                weapon:update ()
+            end
             weapon.fire ()
         end
     end

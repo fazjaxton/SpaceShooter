@@ -18,6 +18,19 @@ function angle_between (o1, o2)
 end
 
 
+-- Reduce an angle to the range -pi to +pi
+function reduce_angle (angle)
+    while (angle > math.pi) do
+        angle = angle - (2 * math.pi)
+    end
+    while (angle < -math.pi) do
+        angle = angle + (2 * math.pi)
+    end
+
+    return angle
+end
+
+
 function get_dist (o1, o2)
     return math.sqrt ((o2.x - o1.x) ^ 2 + (o2.y - o1.y) ^ 2)
 end
