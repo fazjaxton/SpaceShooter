@@ -78,6 +78,9 @@ function Seeker:__init()
         check_limits (self)
         update_pos (self, dt)
         wrap_edges (self)
+        for weapon in pairs (self.weapons) do
+            weapon.fire ()
+        end
     end
 
     self.draw = function (self)
@@ -101,11 +104,30 @@ function MissileDrone:__init()
     self.weapons[EnemyMissile (self)] = true
 end
 
+CannonSeeker = Seeker:extends()
+CannonSeeker.__name = "CannonSeeker"
+function CannonSeeker:__init()
+    CannonSeeker.super.__init(self)
+
+    self.weapons[EnemyCannon (self)] = true
+end
+
+MissileSeeker = Seeker:extends()
+MissileSeeker.__name = "MissileSeeker"
+function MissileSeeker:__init()
+    MissileSeeker.super.__init(self)
+
+    self.weapons[EnemyMissile (self)] = true
+end
+
+
 local enemy_generator = {}
 enemy_generator["drone"] = Drone
 enemy_generator["seeker"] = Seeker
 enemy_generator["cannondrone"] = CannonDrone
 enemy_generator["missiledrone"] = MissileDrone
+enemy_generator["cannonseeker"] = CannonSeeker
+enemy_generator["missileseeker"] = MissileSeeker
 
 function generate_enemy (type)
     return enemy_generator[type] ()
