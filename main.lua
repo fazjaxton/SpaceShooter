@@ -108,6 +108,7 @@ function check_collisions ()
             if (collide (shot, target)) then
                 target:hit_with (shot)
                 shot:hit ()
+                break
             end
         end
     end
