@@ -152,9 +152,16 @@ Weapon = class ()
 Weapon.__name = "Weapon"
 function Weapon:__init(owner)
     self.fire_time = game_time
+
+    -- Ship that owns the weapon
     self.owner = owner
-    self.angle = owner.angle
-    self.mount_pos = owner.angle
+
+    -- Angle which the weapon points
+    self.angle = 0
+
+    -- Angle at which the weapon is mounted on the ship (determines initial
+    -- shot position)
+    self.mount_pos = 0
 
     self.fire = function ()
         local rate = self.fire_rate * owner.fire_multiplier
