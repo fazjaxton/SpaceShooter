@@ -266,6 +266,17 @@ function love.load ()
     shots = {}
     powerups = {}
     explosions = {}
+    stars = {}
+
+    for n = 1,100 do
+        local star = {}
+        star.x = math.random () * win_width
+        star.y = math.random () * win_height
+        star.rad = math.random () * 2
+        star.color = math.random () * 127 + 128
+
+        stars[star] = true
+    end
 end
 
 

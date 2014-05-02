@@ -96,6 +96,13 @@ local function playing_update (game_time, dt)
 end
 
 
+local function draw_stars ()
+    for star in pairs(stars) do
+        love.graphics.setColor (star.color, star.color, star.color, 255)
+        love.graphics.circle ("fill", star.x, star.y, star.rad)
+    end
+end
+
 local function draw_player ()
     player:draw ()
 end
@@ -130,6 +137,7 @@ end
 
 
 local function playing_draw ()
+    draw_stars ()
     draw_player ()
     draw_enemies ()
     draw_shots ()
