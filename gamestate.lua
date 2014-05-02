@@ -86,6 +86,7 @@ local function playing_update (game_time, dt)
     update_enemies (dt)
     update_shots (dt)
     update_powerups (dt)
+    update_explosions (dt)
 
     check_collisions ()
 
@@ -121,11 +122,19 @@ local function draw_powerups ()
 end
 
 
+local function draw_explosions ()
+    for explosion in pairs (explosions) do
+        explosion:draw ()
+    end
+end
+
+
 local function playing_draw ()
     draw_player ()
     draw_enemies ()
     draw_shots ()
     draw_powerups ()
+    draw_explosions ()
 end
 
 

@@ -25,6 +25,7 @@ function Level:__init()
     self.last_enemy_time = game_time
     enemy_count = 0
     powerup_count = 0
+    explosion_count = 0
 
     -- Clear any existing shots
     shots = {}
@@ -37,7 +38,8 @@ function Level:__init()
         -- All enemies have appeared and been destroyed
         return (self.enemy_index > #self.enemy_order and
                 enemy_count == 0 and
-                powerup_count == 0)
+                powerup_count == 0 and
+                explosion_count == 0)
     end
 end
 

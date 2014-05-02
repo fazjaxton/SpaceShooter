@@ -88,6 +88,11 @@ function Player:__init()
                     end
                 end
             end
+
+            if (object:is (Shot)) then
+                local explosion = Explosion (object.x, object.y, object.rad)
+                explosions[explosion] = true
+            end
         elseif (object:is (Powerup)) then
             self:add_powerup (object)
         end

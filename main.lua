@@ -6,6 +6,7 @@ require 'weapon'
 require 'enemy'
 require 'powerup'
 require 'gamestate'
+require 'explosion'
 
 
 function angle_between (o1, o2)
@@ -169,6 +170,13 @@ function update_powerups (dt)
 end
 
 
+function update_explosions (dt)
+    for explosion in pairs (explosions) do
+        explosion:update (dt)
+    end
+end
+
+
 function print_centered (text, sizedesc)
     local h,w,x,y
 
@@ -226,6 +234,12 @@ function love.load ()
     icons.enemy1 = icon_load ("Assets/enemy1.png")
     icons.enemy2 = icon_load ("Assets/enemy2.png")
 
+    icons.explosion = {}
+    for i = 1,16 do
+        filename = string.format ("Assets/exp%02d.png", i)
+        icons.explosion[i] = icon_load (filename)
+    end
+
     font = {}
     font["small"] = love.graphics.newFont ("DejaVuSans.ttf", 20);
     font["med"]   = love.graphics.newFont ("DejaVuSans.ttf", 32);
@@ -251,6 +265,7 @@ function love.load ()
     enemies = {}
     shots = {}
     powerups = {}
+    explosions = {}
 end
 
 
