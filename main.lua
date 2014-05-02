@@ -243,7 +243,9 @@ function love.load ()
     font = {}
     font["small"] = love.graphics.newFont ("DejaVuSans.ttf", 20);
     font["med"]   = love.graphics.newFont ("DejaVuSans.ttf", 32);
-    font["large"] = love.graphics.newFont ("DejaVuSans.ttf", 45);
+    font["large"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 45);
+    font["title"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 80);
+    font["option"] = font["large"]
 
     level_name_display = 3
     current_state = "start"

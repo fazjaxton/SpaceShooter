@@ -1,3 +1,5 @@
+require 'titlescreen'
+
 GameState = class ()
 GameState.__name = "GameState"
 function GameState:__init(update, draw, key, mouse)
@@ -9,12 +11,7 @@ end
 
 
 -- Start Screen functions --
-local function start_screen_draw (game_time, dt)
-    print_centered ("Press a key to Start")
-end
-
-
-local function start_next_level ()
+function start_next_level ()
     game_level_index = game_level_index + 1
     if (game_level_index > #game_levels) then
         current_state = "win"
@@ -22,11 +19,6 @@ local function start_next_level ()
         level = game_levels[game_level_index] ()
         current_state = "level"
     end
-end
-
-
-local function start_screen_key (key)
-    start_next_level ()
 end
 
 
