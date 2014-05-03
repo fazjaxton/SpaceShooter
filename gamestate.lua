@@ -22,6 +22,12 @@ function start_next_level ()
 end
 
 
+function restart_level ()
+    level = game_levels[game_level_index] ()
+    current_state = "level"
+end
+
+
 -- Level Start functions --
 local function level_start_update (game_time, dt)
     if (not level_name_display_start) then
@@ -82,7 +88,9 @@ local function playing_update (game_time, dt)
 
     check_collisions ()
 
-    if (level:complete ()) then
+    if level:failed () then
+        restart_level ()
+    elseif level:complete () then
         start_next_level ()
     end
 end

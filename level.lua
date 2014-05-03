@@ -29,6 +29,8 @@ function Level:__init()
 
     -- Clear any existing shots
     shots = {}
+    enemies = {}
+    powerups = {}
 
     player:set_start_pos ()
 
@@ -39,6 +41,12 @@ function Level:__init()
         return (self.enemy_index > #self.enemy_order and
                 enemy_count == 0 and
                 powerup_count == 0 and
+                explosion_count == 0 and
+                not player.dead)
+    end
+
+    self.failed = function (self)
+        return (player.dead and
                 explosion_count == 0)
     end
 end

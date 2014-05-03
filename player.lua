@@ -9,6 +9,8 @@ function Player:__init()
         self.velocity.speed = 0
         self.velocity.angle = 0
         self.angle = self.velocity.angle
+
+        self.dead = false
     end
 
     self.set_defaults = function (self)
@@ -48,7 +50,9 @@ function Player:__init()
     end
 
     self.draw = function (self)
-        icon_draw (self, icons.player)
+        if not self.dead then
+            icon_draw (self, icons.player)
+        end
     end
 
     self.add_powerup = function (self, powerup)
@@ -87,6 +91,10 @@ function Player:__init()
                         break
                     end
                 end
+            else
+                local explosion = Explosion (self.x, self.y, self.rad)
+                explosions[explosion] = true
+                self.dead = true
             end
 
             if (object:is (Shot)) then

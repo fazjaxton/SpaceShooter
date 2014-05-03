@@ -127,18 +127,20 @@ function check_collisions ()
         end
     end
 
-    for powerup in pairs(powerups) do
-        if (collide (player, powerup)) then
-            player:hit_with (powerup)
-            powerups[powerup] = nil
-            powerup_count = powerup_count - 1
+    if not player.dead then
+        for powerup in pairs(powerups) do
+            if (collide (player, powerup)) then
+                player:hit_with (powerup)
+                powerups[powerup] = nil
+                powerup_count = powerup_count - 1
+            end
         end
-    end
 
-    for enemy in pairs(enemies) do
-        if (collide (player, enemy)) then
-            player:hit_with (enemy)
-            enemy:hit_with (player)
+        for enemy in pairs(enemies) do
+            if (collide (player, enemy)) then
+                player:hit_with (enemy)
+                enemy:hit_with (player)
+            end
         end
     end
 end
