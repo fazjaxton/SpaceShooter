@@ -40,6 +40,7 @@ function Player:__init()
     self.bounds = {}
     self.bounds.rad = self.rad
 
+    self.lives = 3
 
     self.powerup_count = 0
 

@@ -39,8 +39,38 @@ local function level_start_update (game_time, dt)
 end
 
 
+local function draw_player_lives ()
+    local fake_player = {}
+    local y = win_height / 2 + 75
+    local x
+    local life_font
+    local text
+
+    life_font = font["med"]
+    love.graphics.setFont (life_font)
+    text = "x " .. player.lives
+    x = (win_width - player.rad - life_font:getWidth (text)) / 2
+
+    fake_player.x = x
+    fake_player.y = y
+    fake_player.rad = player.rad
+    fake_player.angle = -math.pi / 2
+
+    icon_draw (fake_player, icons.player)
+
+    x = x + player.rad * 2
+
+    love.graphics.setColor (255, 255, 255, 255)
+
+    y = y - life_font:getHeight (text) / 2
+
+    love.graphics.print (text, x, y, 0)
+end
+
+
 local function level_start_draw ()
     print_centered (level.name)
+    draw_player_lives ()
 end
 
 
@@ -89,7 +119,12 @@ local function playing_update (game_time, dt)
     check_collisions ()
 
     if level:failed () then
-        restart_level ()
+        player.lives = player.lives - 1
+        if player.lives == 0 then
+            current_state = "gameover"
+        else
+            restart_level ()
+        end
     elseif level:complete () then
         start_next_level ()
     end
@@ -152,6 +187,11 @@ local function win_draw ()
 end
 
 
+local function gameover_draw ()
+    print_centered ("Game Over")
+end
+
+
 function get_game_states ()
     local states = {}
 
@@ -166,6 +206,9 @@ function get_game_states ()
                                      playing_key)
     states["win"]       = GameState (nil,
                                      win_draw,
+                                     nil)
+    states["gameover"]  = GameState (nil,
+                                     gameover_draw,
                                      nil)
 
     return states

@@ -243,8 +243,8 @@ function love.load ()
     end
 
     font = {}
-    font["small"] = love.graphics.newFont ("DejaVuSans.ttf", 20);
-    font["med"]   = love.graphics.newFont ("DejaVuSans.ttf", 32);
+    font["small"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 20);
+    font["med"]   = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 32);
     font["large"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 45);
     font["title"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 80);
     font["option"] = font["large"]
