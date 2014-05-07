@@ -223,6 +223,21 @@ function icon_load (filename)
     return icon
 end
 
+
+function setup_game ()
+    current_state = "start"
+
+    -- Index incremented to 1 in start_next_level
+    game_level_index = 0
+
+    player = Player ()
+    enemies = {}
+    shots = {}
+    powerups = {}
+    explosions = {}
+end
+
+
 function love.load ()
     game = {}
     game.state = get_game_states ()
@@ -249,8 +264,6 @@ function love.load ()
     font["title"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 80);
     font["option"] = font["large"]
 
-    level_name_display = 3
-    current_state = "start"
 
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
@@ -258,18 +271,10 @@ function love.load ()
     game_time = 0
     fire_time = 0
 
-    which_enemy = 1
     shot_range = win_height
 
-    player = Player ()
+    setup_game ()
 
-    -- Index incremented to 1 in start_next_level
-    game_level_index = 0
-
-    enemies = {}
-    shots = {}
-    powerups = {}
-    explosions = {}
     stars = {}
 
     for n = 1,100 do

@@ -10,36 +10,68 @@ function GameState:__init(update, draw, key, mouse)
 end
 
 
+local function return_to_title ()
+    setup_game ()
+end
+
+
+local function set_gameover ()
+    transition_start ("Game Over", 3, return_to_title)
+end
+
+
+local function set_win ()
+    transition_start ("You Win!", 5, return_to_title)
+end
+
+
+local function set_playing ()
+    current_state = "playing"
+end
+
+
+local function set_complete ()
+    transition_start ("Level Complete!", 3, start_next_level)
+end
+
+
 -- Start Screen functions --
+local function start_level_transition ()
+    transition_start (level.name, 3, set_playing, draw_player_lives)
+end
+
+
 function start_next_level ()
     game_level_index = game_level_index + 1
     if (game_level_index > #game_levels) then
-        current_state = "win"
+        set_win ()
     else
         level = game_levels[game_level_index] ()
-        current_state = "level"
+        start_level_transition ()
     end
 end
 
 
 function restart_level ()
     level = game_levels[game_level_index] ()
-    current_state = "level"
+    start_level_transition ()
 end
 
 
 -- Level Start functions --
-local function level_start_update (game_time, dt)
-    if (not level_name_display_start) then
-        level_name_display_start = game_time
-    elseif (game_time - level_name_display_start >= level_name_display) then
-        level_name_display_start = nil
-        current_state = "playing"
+local function transition_update (gametime, dt)
+    if (not transition_start_time) then
+        transition_start_time = game_time
+    else
+        local time = game_time - transition_start_time
+        if (time > transition_min and time > transition_time) then
+            transition_end_action ()
+        end
     end
 end
 
 
-local function draw_player_lives ()
+function draw_player_lives ()
     local fake_player = {}
     local y = win_height / 2 + 75
     local x
@@ -68,9 +100,32 @@ local function draw_player_lives ()
 end
 
 
-local function level_start_draw ()
-    print_centered (level.name)
-    draw_player_lives ()
+local function transition_draw ()
+    print_centered (transition_text)
+    if (transition_draw_extra) then
+        transition_draw_extra ()
+    end
+end
+
+
+local function transition_key ()
+    -- Set transition time to zero to cancel transition immediately
+    transition_time = 0
+end
+
+
+function transition_start (text, time, end_action, draw)
+    transition_text = text
+    transition_time = time
+    transition_end_action = end_action
+    transition_start_time = nil
+    transition_draw_extra = draw
+
+    -- Allow at least one second for transitions so that if the player
+    -- is still mashing buttons, the screen doesn't clear
+    transition_min = 1
+
+    current_state = "transition"
 end
 
 
@@ -121,12 +176,12 @@ local function playing_update (game_time, dt)
     if level:failed () then
         player.lives = player.lives - 1
         if player.lives == 0 then
-            current_state = "gameover"
+            set_gameover ()
         else
             restart_level ()
         end
     elseif level:complete () then
-        start_next_level ()
+        set_complete ()
     end
 end
 
@@ -181,35 +236,18 @@ local function playing_draw ()
 end
 
 
--- Win screen functions --
-local function win_draw ()
-    print_centered ("You Win!")
-end
-
-
-local function gameover_draw ()
-    print_centered ("Game Over")
-end
-
-
 function get_game_states ()
     local states = {}
 
     states["start"]     = GameState (nil,
                                      start_screen_draw,
                                      start_screen_key)
-    states["level"]     = GameState (level_start_update,
-                                     level_start_draw,
-                                     nil)
     states["playing"]   = GameState (playing_update,
                                      playing_draw,
                                      playing_key)
-    states["win"]       = GameState (nil,
-                                     win_draw,
-                                     nil)
-    states["gameover"]  = GameState (nil,
-                                     gameover_draw,
-                                     nil)
+    states["transition"] = GameState(transition_update,
+                                     transition_draw,
+                                     transition_key)
 
     return states
 end
