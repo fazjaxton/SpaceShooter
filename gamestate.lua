@@ -54,14 +54,16 @@ function start_next_level ()
     if (game_level_index > #game_levels) then
         set_win ()
     else
-        level = game_levels[game_level_index] ()
+        level = game_levels[game_level_index]
+        level.start ()
         start_level_transition ()
     end
 end
 
 
 function start_level ()
-    level = game_levels[game_level_index] ()
+    level = game_levels[game_level_index]
+    level.start ()
     start_level_transition ()
 end
 

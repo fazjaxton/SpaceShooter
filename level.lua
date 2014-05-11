@@ -21,18 +21,20 @@ end
 
 
 function Level:__init()
-    self.enemy_index = 1
-    self.last_enemy_time = game_time
-    enemy_count = 0
-    powerup_count = 0
-    explosion_count = 0
+    self.start = function ()
+        self.enemy_index = 1
+        self.last_enemy_time = game_time
+        enemy_count = 0
+        powerup_count = 0
+        explosion_count = 0
 
-    -- Clear any existing shots
-    shots = {}
-    enemies = {}
-    powerups = {}
+        -- Clear any existing shots
+        shots = {}
+        enemies = {}
+        powerups = {}
 
-    player:set_start_pos ()
+        player:set_start_pos ()
+    end
 
     self.update = release_enemy
 
@@ -84,4 +86,4 @@ function Level2:__init()
     self.enemy_timing = 0.25
 end
 
-game_levels = { Level1, Level2 }
+game_levels = { Level1 (), Level2 ()}

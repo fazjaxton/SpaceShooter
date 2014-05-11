@@ -227,8 +227,6 @@ end
 function setup_game ()
     set_state ("start")
 
-    game_level_index = 1
-
     player = Player ()
     enemies = {}
     shots = {}
@@ -277,6 +275,7 @@ function love.load ()
     shot_range = win_height
 
     setup_game ()
+    selected_level_index = 1
 
     stars = {}
 
