@@ -227,8 +227,7 @@ end
 function setup_game ()
     current_state = "start"
 
-    -- Index incremented to 1 in start_next_level
-    game_level_index = 0
+    game_level_index = 1
 
     player = Player ()
     enemies = {}

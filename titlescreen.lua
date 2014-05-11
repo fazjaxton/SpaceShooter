@@ -1,6 +1,6 @@
 
 local selected = 1
-local menu_text = { "Start", "Credits" }
+local menu_text = { "Start", "Select Level" }
 
 
 local function draw_title ()
@@ -72,9 +72,22 @@ local function draw_controls ()
 end
 
 
+local function change_level (dir)
+    game_level_index = game_level_index + dir
+    if game_level_index < 1 then
+        game_level_index = 1
+    elseif game_level_index > #game_levels then
+        game_level_index = #game_levels
+    end
+    menu_text[2] = game_levels[game_level_index]().name
+end
+
+
 local function select_menu_item (idx)
     if (idx == 1) then
-        start_next_level ()
+        start_level ()
+    elseif (idx == 2) then
+        change_level (1)
     end
 end
 
@@ -91,6 +104,10 @@ function start_screen_key (key)
         selected = selected + 1
     elseif (key == "up") then
         selected = selected - 1
+    elseif (key == "left" and selected == 2) then
+        change_level (-1)
+    elseif (key == "right" and selected == 2) then
+        change_level (1)
     elseif (key == " ") then
         select_menu_item (selected)
     end

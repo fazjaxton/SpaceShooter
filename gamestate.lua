@@ -52,7 +52,7 @@ function start_next_level ()
 end
 
 
-function restart_level ()
+function start_level ()
     level = game_levels[game_level_index] ()
     start_level_transition ()
 end
@@ -178,7 +178,7 @@ local function playing_update (game_time, dt)
         if player.lives == 0 then
             set_gameover ()
         else
-            restart_level ()
+            start_level ()
         end
     elseif level:complete () then
         set_complete ()
