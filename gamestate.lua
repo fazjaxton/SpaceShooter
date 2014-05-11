@@ -2,11 +2,19 @@ require 'titlescreen'
 
 GameState = class ()
 GameState.__name = "GameState"
-function GameState:__init(update, draw, key, mouse)
+function GameState:__init(update, draw, key, activate)
     self.update = update
     self.draw = draw
     self.keypressed = key
-    self.mousepressed = mouse
+    self.activate = activate
+end
+
+
+function set_state (state)
+    current_state = state
+    if game.state[state].activate then
+        game.state[state].activate ()
+    end
 end
 
 
@@ -26,7 +34,7 @@ end
 
 
 local function set_playing ()
-    current_state = "playing"
+    set_state ("playing")
 end
 
 
@@ -125,7 +133,7 @@ function transition_start (text, time, end_action, draw)
     -- is still mashing buttons, the screen doesn't clear
     transition_min = 1
 
-    current_state = "transition"
+    set_state ("transition")
 end
 
 
@@ -236,18 +244,38 @@ local function playing_draw ()
 end
 
 
+local function start_screen_activate ()
+    -- Pause all other audio
+    love.audio.pause ()
+
+    menu_music:rewind ()
+    menu_music:play ()
+
+    -- Rewind game music so it starts over each game
+    game_music:rewind ()
+end
+
+
+local function transition_activate ()
+    menu_music:pause ()
+    game_music:play ()
+end
+
+
 function get_game_states ()
     local states = {}
 
     states["start"]     = GameState (nil,
                                      start_screen_draw,
-                                     start_screen_key)
+                                     start_screen_key,
+                                     start_screen_activate)
     states["playing"]   = GameState (playing_update,
                                      playing_draw,
                                      playing_key)
     states["transition"] = GameState(transition_update,
                                      transition_draw,
-                                     transition_key)
+                                     transition_key,
+                                     transition_activate)
 
     return states
 end

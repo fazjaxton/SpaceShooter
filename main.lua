@@ -225,7 +225,7 @@ end
 
 
 function setup_game ()
-    current_state = "start"
+    set_state ("start")
 
     game_level_index = 1
 
@@ -263,6 +263,10 @@ function love.load ()
     font["title"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 80);
     font["option"] = font["large"]
 
+    menu_music = love.audio.newSource ("Assets/Space_Idea.mp3")
+    game_music = love.audio.newSource ("Assets/Space_Circuit.mp3")
+    menu_music:setLooping(true)
+    game_music:setLooping(true)
 
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()
