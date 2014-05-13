@@ -1,0 +1,39 @@
+This game was designed and programmed by Kevin Smith, but the visual and audio
+elements come from many designers.  They are listed below with links to the
+sources and the licenses under which they are distributed.
+
+
+Gameplay and Programming
+Kevin Smith
+GPL v3 - http://www.gnu.org/copyleft/gpl.html
+
+Player Sprite
+DK!
+http://opengameart.org/content/little-spaceship
+CC-BY 3.0 - http://creativecommons.org/licenses/by/3.0/
+
+Explosion Animation
+Cuzco
+http://opengameart.org/content/explosion
+CC0 - http://creativecommons.org/publicdomain/zero/1.0/
+
+All other sprites
+Spritelib
+http://www.widgetworx.com/spritelib/
+CPL 1.0 - http://opensource.org/licenses/cpl1.0.php
+
+Font - Robotech
+Gustavo Paz L.
+http://openfontlibrary.org/en/font/robotech-gp
+CC-BY-SA 4.0 - http://creativecommons.org/licenses/by-sa/4.0/
+
+Title Music - Random Space Idea
+Joe Reynolds
+http://jrtheories.webs.com/downloads
+CC-BY 3.0 - http://creativecommons.org/licenses/by/3.0/
+
+Game Music - Space Circuit
+Jakim
+http://www.jamendo.com/en/track/1102642/space-circuit
+CC-BY-NC-SA 3.0 - http://creativecommons.org/licenses/by-nc-sa/3.0/
+
