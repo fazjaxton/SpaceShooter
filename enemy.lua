@@ -32,8 +32,7 @@ function Enemy:__init()
             powerup_count = powerup_count + 1
         end
 
-        local explosion = Explosion (self.x, self.y, self.rad)
-        explosions[explosion] = true
+        make_explosion (self.x, self.y, self.rad)
 
         enemies[self] = nil
         enemy_count = enemy_count -1

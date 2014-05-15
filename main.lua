@@ -235,6 +235,24 @@ function setup_game ()
 end
 
 
+function play_explosion_sfx ()
+    -- Find an audio source that is not playing and play it.
+    for sound in pairs(explosion_sfx) do
+        if not sound:isPlaying () then
+            sound:play ()
+            break
+        end
+    end
+end
+
+
+function make_explosion (x, y, rad)
+    local explosion = Explosion (x, y, rad)
+    explosions[explosion] = true
+    play_explosion_sfx ()
+end
+
+
 function love.load ()
     game = {}
     game.state = get_game_states ()
@@ -265,6 +283,16 @@ function love.load ()
     game_music = love.audio.newSource ("Assets/Space_Circuit.mp3")
     menu_music:setLooping(true)
     game_music:setLooping(true)
+
+    -- Load multiple copies to support overlapping sounds
+    explosion_sfx = {}
+    for i = 1,5 do
+        local sound
+        sound = love.audio.newSource ("Assets/explosion.ogg", "static")
+        explosion_sfx[sound] = true;
+    end
+
+    powerup_sfx = love.audio.newSource ("Assets/powerup.ogg", "static")
 
     win_width = love.window.getWidth ()
     win_height = love.window.getHeight ()

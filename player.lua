@@ -93,17 +93,16 @@ function Player:__init()
                     end
                 end
             else
-                local explosion = Explosion (self.x, self.y, self.rad)
-                explosions[explosion] = true
+                make_explosion (self.x, self.y, self.rad)
                 self.dead = true
             end
 
             if (object:is (Shot)) then
-                local explosion = Explosion (object.x, object.y, object.rad)
-                explosions[explosion] = true
+                make_explosion (object.x, object.y, object.rad)
             end
         elseif (object:is (Powerup)) then
             self:add_powerup (object)
+            powerup_sfx:play ()
         end
     end
 
