@@ -90,23 +90,20 @@ function draw_player_lives ()
 
     life_font = font["med"]
     love.graphics.setFont (life_font)
-    text = "x " .. player.lives
+    text = "  x " .. player.lives
     x = (win_width - player.rad - life_font:getWidth (text)) / 2
 
-    fake_player.x = x
+    fake_player.x = x + player.rad / 2
     fake_player.y = y
     fake_player.rad = player.rad
     fake_player.angle = -math.pi / 2
 
     icon_draw (fake_player, icons.player)
 
-    x = x + player.rad * 2
+    x = x + player.rad
 
     love.graphics.setColor (255, 255, 255, 255)
-
-    y = y - life_font:getHeight (text) / 2
-
-    love.graphics.print (text, x, y, 0)
+    draw_text (text, x, y, life_font, "center", "left")
 end
 
 

@@ -180,23 +180,19 @@ end
 
 
 function print_centered (text, sizedesc)
-    local h,w,x,y
+    local x,y
 
     if (not sizedesc) then
         sizedesc = "large"
     end
 
     local font = font[sizedesc]
-    love.graphics.setFont (font)
 
-    w = font:getWidth (text);
-    h = font:getHeight (text);
-
-    x = (win_width - w) / 2
-    y = (win_height - h) / 2
+    x = win_width / 2
+    y = win_height / 2
 
     love.graphics.setColor (255, 255, 255, 255)
-    love.graphics.print (text, x, y, 0)
+    draw_text (text, x, y, font, "center", "center")
 end
 
 
@@ -250,6 +246,46 @@ function make_explosion (x, y, rad)
     local explosion = Explosion (x, y, rad)
     explosions[explosion] = true
     play_explosion_sfx ()
+end
+
+
+function draw_text (text, x, y, font, yalign, xalign)
+    local w, h
+
+    w = font:getWidth(text)
+    h = font:getHeight(text)
+
+    -- This font has a lot of dead space above the top of the text.  This
+    -- places text lower than intended and throws off height calculations.
+    -- These factors correct for this, using a height that is close to the
+    -- actual text height.
+    y = y - h * 0.3
+    h = h * 0.6
+
+    if not xalign then
+        xalign = "top"
+    end
+
+    if not yalign then
+        yalign = "left"
+    end
+
+    if xalign == "center" then
+        x = x - w / 2
+    elseif xalign == "right" then
+        x = x - w
+    end
+
+    if yalign == "center" then
+        y = y - h / 2
+    elseif yalign == "bottom" then
+        y = y - h
+    end
+
+    love.graphics.setFont (font)
+    love.graphics.print (text, x, y, 0)
+
+    return w, h
 end
 
 

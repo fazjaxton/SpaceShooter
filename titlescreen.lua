@@ -5,28 +5,24 @@ local menu_text = { "Start", game_levels[1].name}
 
 
 local function draw_title ()
-    local h,w,x,y
+    local x,y
     local font = font["title"]
     local text = "SpaceShooter"
 
     love.graphics.setFont (font)
 
-    w = font:getWidth (text);
-    h = font:getHeight (text);
-
-    x = (win_width - w) / 2
-    y = 50
+    x = win_width / 2
+    y = 75
 
     love.graphics.setColor (255, 255, 255, 255)
-    love.graphics.print (text, x, y, 0)
+    draw_text (text, x, y, font, "top", "center")
 end
 
 
 local function draw_menu ()
     local font = font["option"]
-    local x,y,w
+    local x,y,w,h
 
-    love.graphics.setFont (font)
     love.graphics.setColor (255, 255, 255, 255)
 
     y = 200
@@ -38,11 +34,10 @@ local function draw_menu ()
             text = "[ " .. text .. " ]"
         end
 
-        w = font:getWidth (text);
-        x = (win_width - w) / 2
+        x = win_width / 2
 
-        love.graphics.print (text, x, y, 0)
-        y = y + 50
+        w,h = draw_text (text, x, y, font, "top", "center")
+        y = y + h * 1.5
     end
 end
 
@@ -57,18 +52,23 @@ local function draw_controls ()
                      }
     local control_font = font["small"]
     local separator = " - "
-    local sep_width = control_font:getWidth (separator)
+    local half_sep_width = control_font:getWidth (separator) / 2
     local y = win_height / 2 + 100
 
-    love.graphics.setFont (control_font)
-
     for i,control in ipairs (controls) do
-        local w = control_font:getWidth (control[1])
-        local x = (win_width - sep_width) / 2 - w
+        local x = win_width / 2
+        local w,h
         local line = control[1] .. separator .. control[2]
 
-        love.graphics.print (line, x, y, 0)
-        y = y + control_font:getHeight (line)
+        -- Center each line at the separator, with controls aligned
+        -- on the left and actions aligned on the right.
+        draw_text (control[1], x - half_sep_width, y,
+                   control_font, "top", "right")
+        draw_text (separator,  x, y,
+                   control_font, "top", "center")
+        w, h = draw_text (control[2], x + half_sep_width, y,
+                   control_font, "top", "left")
+        y = y + h * 1.2
     end
 end
 
