@@ -8,6 +8,7 @@ function Powerup:__init()
 
     self.dist = 0
     self.max_dist = 1000
+    self.icon = icons.powerup
 
     self.apply = function (self, player)
         self.orig_value = player.value
@@ -29,7 +30,7 @@ function Powerup:__init()
     end
 
     self.draw = function (self)
-        icon_draw (self, icons.powerup)
+        icon_draw (self, self.icon)
     end
 end
 

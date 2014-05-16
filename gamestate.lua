@@ -233,6 +233,36 @@ local function draw_explosions ()
 end
 
 
+local function draw_status ()
+    local status_font
+    local powerup_spacing = 10
+    local border = 10
+    local x,y,w,h
+    local powerup_y
+
+    status_font = font["med"]
+
+    powerup_text = "Powerups: "
+    lives_text = "Lives: " .. player.lives
+    y = win_height - border
+    x = border
+
+    love.graphics.setColor (255, 255, 255, 255)
+    w,h = draw_text (powerup_text, x, y, status_font, "bottom", "left")
+
+    x = x + w
+    powerup_y = y - (h + icons.powerup.h) / 2
+
+    for powerup in pairs(player.powerups) do
+        love.graphics.draw (powerup.icon.img, x, powerup_y, 0)
+        x = x + powerup.icon.w + powerup_spacing
+    end
+
+    x = win_width / 2
+    draw_text (lives_text, x, y, status_font, "bottom", "left")
+end
+
+
 local function playing_draw ()
     draw_stars ()
     draw_player ()
@@ -240,6 +270,7 @@ local function playing_draw ()
     draw_shots ()
     draw_powerups ()
     draw_explosions ()
+    draw_status ()
 end
 
 
