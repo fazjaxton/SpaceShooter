@@ -47,7 +47,7 @@ local function draw_controls ()
     local controls = { {"Up / W", "Forward Thrust" },
                        {"Down / S", "Reverse Thrust" },
                        {"Left / A", "Spin Left" },
-                       {"Right / D", "Spin Rigth" },
+                       {"Right / D", "Spin Right" },
                        {"Space", "Shoot" },
                      }
     local control_font = font["small"]
