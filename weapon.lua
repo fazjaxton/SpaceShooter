@@ -54,8 +54,6 @@ CannonShot.__name = "CannonShot"
 function CannonShot:__init (weapon)
     CannonShot.super.__init(self, weapon)
 
-    self.velocity.speed = 100
-
     self.rad = 8
     self.bounds = {}
     self.bounds.rad = self.rad
@@ -90,7 +88,7 @@ function MissileShot:__init (weapon)
 
     self.velocity.speed = 200
     self.accel = 600
-    self.max_speed = 200
+    self.max_speed = 150
     self.guidance_dist = 50
     self.weapon = weapon
 
@@ -163,6 +161,8 @@ EnemyCannonShot = CannonShot:extends ()
 EnemyCannonShot.__name = "EnemyCannonShot"
 function EnemyCannonShot:__init (weapon)
     EnemyCannonShot.super.__init(self, weapon)
+
+    self.velocity.speed = 250
 
     self.harms["player"] = true
 end
