@@ -24,6 +24,7 @@ function Shot:__init(weapon)
     self.min_speed = 0
 
     self.velocity = {}
+    self.harms = {}
 
     self.angle = weapon.owner.angle
     self.velocity.angle = weapon.owner.angle + weapon.angle
@@ -66,13 +67,16 @@ end
 
 function update_target (shot)
     local best_dist
+    local options
     local target
 
-    for harms in pairs(shot.harms) do
-        local dist = get_dist (shot, harms)
+    options = get_targets (shot)
+
+    for option in pairs(options) do
+        local dist = get_dist (shot, option)
         if (not best_dist or dist < best_dist) then
             best_dist = dist
-            target = harms
+            target = option
         end
     end
 
@@ -124,7 +128,7 @@ PlayerMissileShot.__name = "PlayerMissileShot"
 function PlayerMissileShot:__init (weapon)
     PlayerMissileShot.super.__init(self, weapon)
 
-    self.harms = enemies
+    self.harms["enemies"] = true
     self.icon = icons.player_missile
 
     self.max_dist = 600
@@ -136,8 +140,7 @@ EnemyMissileShot.__name = "EnemyMissileShot"
 function EnemyMissileShot:__init (weapon)
     EnemyMissileShot.super.__init(self, weapon)
 
-    self.harms = {}
-    self.harms[player] = true
+    self.harms["player"] = true
 
     self.icon = icons.enemy_missile
 
@@ -152,7 +155,7 @@ function PlayerCannonShot:__init (weapon)
 
     self.velocity.speed = 1000
 
-    self.harms = enemies
+    self.harms["enemies"] = true
 end
 
 
@@ -161,8 +164,7 @@ EnemyCannonShot.__name = "EnemyCannonShot"
 function EnemyCannonShot:__init (weapon)
     EnemyCannonShot.super.__init(self, weapon)
 
-    self.harms = {}
-    self.harms[player] = true
+    self.harms["player"] = true
 end
 
 

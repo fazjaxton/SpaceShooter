@@ -116,9 +116,26 @@ function wrap_edges (object)
 end
 
 
+function get_targets (shot)
+    local targets = {}
+
+    if shot.harms["enemies"] then
+        for e in pairs(enemies) do
+            targets[e] = true
+        end
+    end
+
+    if shot.harms["player"] then
+        targets[player] = true
+    end
+
+    return targets
+end
+
 function check_collisions ()
     for shot in pairs(shots) do
-        for target in pairs(shot.harms) do
+        local targets = get_targets (shot)
+        for target in pairs(targets) do
             if (collide (shot, target)) then
                 target:hit_with (shot)
                 shot:hit ()
