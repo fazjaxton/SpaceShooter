@@ -142,6 +142,21 @@ function check_collisions ()
                 break
             end
         end
+        if not shots[shot] then
+            break;
+        end
+
+        -- A shot collecting a powerup is the same as the player collecting it
+        if shot.collects["powerups"] then
+            for powerup in pairs(powerups) do
+                if (collide (shot, powerup)) then
+                    player:hit_with (powerup)
+                    powerups[powerup] = nil
+                    powerup_count = powerup_count - 1
+                    shot:hit ()
+                end
+            end
+        end
     end
 
     if not player.dead then

@@ -25,6 +25,7 @@ function Shot:__init(weapon)
 
     self.velocity = {}
     self.harms = {}
+    self.collects = {}
 
     self.angle = weapon.owner.angle
     self.velocity.angle = weapon.owner.angle + weapon.angle
@@ -154,6 +155,7 @@ function PlayerCannonShot:__init (weapon)
     self.velocity.speed = 1000
 
     self.harms["enemies"] = true
+    self.collects["powerups"] = true
 end
 
 
