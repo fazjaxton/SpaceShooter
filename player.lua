@@ -25,13 +25,13 @@ function Player:__init()
         self.weapons = {}
         self.weapons[PlayerCannon (self, 0, 0)] = true
 
-        self.powerups = {}
-
         self.fire_multiplier = 1
     end
 
     self:set_start_pos ()
     self:set_defaults ()
+
+    self.powerups = {}
 
     self.rad = 25
 
@@ -91,6 +91,7 @@ function Player:__init()
                         self:remove_powerup (powerup)
                         break
                     end
+                    count = count + 1
                 end
             else
                 make_explosion (self.x, self.y, self.rad)
