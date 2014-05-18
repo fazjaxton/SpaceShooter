@@ -125,6 +125,14 @@ function get_targets (shot)
         end
     end
 
+    for s in pairs(shots) do
+        if shot.harms["enemymissiles"] and s:is(EnemyMissileShot) then
+            targets[s] = true
+        elseif shot.harms["playermissiles"] and s:is(PlayerMissileShot) then
+            targets[s] = true
+        end
+    end
+
     if shot.harms["player"] then
         targets[player] = true
     end

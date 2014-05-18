@@ -101,6 +101,11 @@ function MissileShot:__init (weapon)
         shots[self] = nil
     end
 
+    self.hit_with = function (self, object)
+        shots[self] = nil
+        make_explosion (self.x, self.y, self.rad)
+    end
+
     self.update = function (self, dt)
         if (self.max_dist and self.dist > self.max_dist) then
             self:destroy ()
@@ -155,6 +160,7 @@ function PlayerCannonShot:__init (weapon)
     self.velocity.speed = 1000
 
     self.harms["enemies"] = true
+    self.harms["enemymissiles"] = true
     self.collects["powerups"] = true
 end
 
@@ -167,6 +173,7 @@ function EnemyCannonShot:__init (weapon)
     self.velocity.speed = 250
 
     self.harms["player"] = true
+    self.harms["playermissiles"] = true
 end
 
 
