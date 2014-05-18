@@ -81,7 +81,6 @@ function Player:__init()
 
     self.hit_with = function (self, object)
         if (object:is (Shot) or object:is (Enemy)) then
-            local lost = nil
             local count = 0
 
             if (self.powerup_count > 0) then
