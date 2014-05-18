@@ -57,8 +57,10 @@ function Player:__init()
     end
 
     self.add_powerup = function (self, powerup)
-        self.powerups[powerup] = true
-        self.powerup_count = self.powerup_count + 1
+        if powerup.type == "persistent" then
+            self.powerups[powerup] = true
+            self.powerup_count = self.powerup_count + 1
+        end
         powerup:apply (self)
         print ("Powerup added")
     end

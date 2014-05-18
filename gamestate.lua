@@ -251,9 +251,9 @@ local function draw_status ()
     w,h = draw_text (powerup_text, x, y, status_font, "bottom", "left")
 
     x = x + w
-    powerup_y = y - (h + icons.powerup.h) / 2
 
     for powerup in pairs(player.powerups) do
+        powerup_y = y - (h + powerup.icon.h) / 2
         love.graphics.draw (powerup.icon.img, x, powerup_y, 0)
         x = x + powerup.icon.w + powerup_spacing
     end

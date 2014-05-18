@@ -8,7 +8,6 @@ function Powerup:__init()
 
     self.dist = 0
     self.max_dist = 1000
-    self.icon = icons.powerup
 
     self.apply = function (self, player)
         self.orig_value = player.value
@@ -38,14 +37,31 @@ FastFirePowerup = Powerup:extends()
 FastFirePowerup.__name = "FastFirePowerup"
 function FastFirePowerup:__init()
     FastFirePowerup.super.__init(self)
+    self.type = "persistent"
+
+    self.icon = icons.powerups["green"]
 
     self.apply = function (self, player)
         player.fire_multiplier = player.fire_multiplier * 2
     end
 end
 
+ExtraLifePowerup = Powerup:extends()
+ExtraLifePowerup.__name = "ExtraLifePowerup"
+function ExtraLifePowerup:__init()
+    ExtraLifePowerup.super.__init(self)
+    self.type = "instantaneous"
+
+    self.icon = icons.powerups["red"]
+
+    self.apply = function (self, player)
+        player.lives = player.lives + 1
+    end
+end
+
 local powerup_generator = {
-    FastFire = FastFirePowerup
+    FastFire = FastFirePowerup,
+    ExtraLife = ExtraLifePowerup,
 }
 
 function generate_powerup (type)

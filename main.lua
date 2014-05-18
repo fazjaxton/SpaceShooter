@@ -338,9 +338,16 @@ function love.load ()
     icons.shot = icon_load ("Assets/shot.png")
     icons.player_missile = icon_load ("Assets/missile-green.png")
     icons.enemy_missile = icon_load ("Assets/missile-red.png")
-    icons.powerup = icon_load ("Assets/powerup-green.png")
     icons.enemy1 = icon_load ("Assets/enemy1.png")
     icons.enemy2 = icon_load ("Assets/enemy2.png")
+
+    icons.powerups = {}
+    icons.powerups["red"]    = icon_load ("Assets/powerup-red.png")
+    icons.powerups["blue"]   = icon_load ("Assets/powerup-blue.png")
+    icons.powerups["yellow"] = icon_load ("Assets/powerup-yellow.png")
+    icons.powerups["green"]  = icon_load ("Assets/powerup-green.png")
+    icons.powerups["purple"] = icon_load ("Assets/powerup-purple.png")
+    icons.powerups["orange"] = icon_load ("Assets/powerup-orange.png")
 
     icons.explosion = {}
     for i = 1,16 do
