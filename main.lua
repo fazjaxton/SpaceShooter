@@ -330,6 +330,8 @@ end
 
 
 function love.load ()
+    math.randomseed (os.time())
+
     game = {}
     game.state = get_game_states ()
 
