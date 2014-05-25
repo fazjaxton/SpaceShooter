@@ -179,8 +179,9 @@ end
 
 Weapon = class ()
 Weapon.__name = "Weapon"
-function Weapon:__init(owner)
-    self.fire_time = game_time
+function Weapon:__init(owner, rate)
+    self.fire_rate = rate
+    self.next_fire = game_time + (1 / (rate * 2))
 
     -- Ship that owns the weapon
     self.owner = owner
@@ -199,35 +200,34 @@ function Weapon:__init(owner)
         local rate = self.fire_rate * owner.fire_multiplier
 
         -- Don't fire faster than max rate
-        if (game_time < self.fire_time + 1 / rate) then
+        if (game_time < self.next_fire) then
             return
         end
 
         local shot = self.shoot (self)
 
         shots[shot] = true
-        self.fire_time = game_time
+        self.next_fire = game_time + (1 / rate)
     end
 end
 
 Cannon = Weapon:extends ()
 Cannon.__name = "Cannon"
-function Cannon:__init(owner)
-    Cannon.super.__init(self, owner)
+function Cannon:__init(owner, rate)
+    Cannon.super.__init(self, owner, rate)
 end
 
 Missile = Weapon:extends ()
 Missile.__name = "Missile"
-function Missile:__init(owner)
-    Missile.super.__init(self, owner)
+function Missile:__init(owner, rate)
+    Missile.super.__init(self, owner, rate)
 end
 
 PlayerCannon = Cannon:extends ()
 PlayerCannon.__name = "PlayerCannon"
 function PlayerCannon:__init(owner, pos, angle)
-    PlayerCannon.super.__init(self, owner)
+    PlayerCannon.super.__init(self, owner, 5)
     self.shoot = PlayerCannonShot
-    self.fire_rate = 5
     self.angle = angle
     self.mount_pos = pos
 end
@@ -235,9 +235,8 @@ end
 PlayerMissile = Missile:extends ()
 PlayerMissile.__name = "PlayerMissile"
 function PlayerMissile:__init(owner, pos, angle)
-    PlayerMissile.super.__init(self, owner)
+    PlayerMissile.super.__init(self, owner, 0.75)
     self.shoot = PlayerMissileShot
-    self.fire_rate = 0.75
     self.angle = angle
     self.mount_pos = pos
 end
@@ -245,9 +244,8 @@ end
 EnemyCannon = Cannon:extends ()
 EnemyCannon.__name = "EnemyCannon"
 function EnemyCannon:__init(owner)
-    EnemyCannon.super.__init(self, owner)
+    EnemyCannon.super.__init(self, owner, 0.5)
     self.shoot = EnemyCannonShot
-    self.fire_rate = 0.5
     self.angle_limit = 0.78  -- Pi / 4
 
     self.update = function (self)
@@ -258,7 +256,6 @@ end
 EnemyMissile = Missile:extends ()
 EnemyMissile.__name = "EnemyMissile"
 function EnemyMissile:__init(owner)
-    EnemyMissile.super.__init(self, owner)
+    EnemyMissile.super.__init(self, owner, 0.25)
     self.shoot = EnemyMissileShot
-    self.fire_rate = 0.25
 end
