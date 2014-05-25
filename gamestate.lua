@@ -142,6 +142,8 @@ local function playing_key (key)
         for weapon in pairs (player.weapons) do
             weapon.fire ()
         end
+    elseif (key == "escape") then
+        return_to_title ()
     end
 end
 
