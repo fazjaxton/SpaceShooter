@@ -1,8 +1,23 @@
 Enemy = class {}
 Enemy.__name = "Enemy"
 function Enemy:__init()
-    self.x = win_width
-    self.y = math.random () * win_height
+    local edge = math.random () * 4
+
+    if (edge < 2) then          -- left or right
+        self.y = math.random () * win_height
+        if (edge < 1) then      -- left
+            self.x = 0
+        else                    -- right
+            self.x = win_width
+        end
+    else                        -- top or bottom
+        self.x = math.random () * win_width
+        if (edge < 3) then      -- top
+            self.y = 0
+        else                    -- bottom
+            self.y = win_height
+        end
+    end
 
     self.velocity = {}
     self.velocity.speed = 0
