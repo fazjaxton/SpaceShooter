@@ -340,8 +340,22 @@ function love.load ()
     icons.shot = icon_load ("Assets/shot.png")
     icons.player_missile = icon_load ("Assets/missile-green.png")
     icons.enemy_missile = icon_load ("Assets/missile-red.png")
-    icons.enemy1 = icon_load ("Assets/enemy1.png")
-    icons.enemy2 = icon_load ("Assets/enemy2.png")
+
+    icons.seeker = {}
+    icons.seeker["purple"] = icon_load ("Assets/seeker-purple.png")
+    icons.seeker["blue"]   = icon_load ("Assets/seeker-blue.png")
+    icons.seeker["green"]  = icon_load ("Assets/seeker-green.png")
+    icons.seeker["yellow"] = icon_load ("Assets/seeker-yellow.png")
+    icons.seeker["orange"] = icon_load ("Assets/seeker-orange.png")
+    icons.seeker["red"]    = icon_load ("Assets/seeker-red.png")
+
+    icons.drone = {}
+    icons.drone["purple"] = icon_load ("Assets/drone-purple.png")
+    icons.drone["blue"]   = icon_load ("Assets/drone-blue.png")
+    icons.drone["green"]  = icon_load ("Assets/drone-green.png")
+    icons.drone["yellow"] = icon_load ("Assets/drone-yellow.png")
+    icons.drone["orange"] = icon_load ("Assets/drone-orange.png")
+    icons.drone["red"]    = icon_load ("Assets/drone-red.png")
 
     icons.powerups = {}
     icons.powerups["red"]    = icon_load ("Assets/powerup-red.png")

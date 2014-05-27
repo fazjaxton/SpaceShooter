@@ -79,8 +79,10 @@ function Drone:__init()
     self.velocity.angle = math.random () * math.pi * 2
     self.angle = self.velocity.angle
 
+    self.icon = icons.drone["green"]
+
     self.draw = function (self)
-        icon_draw (self, icons.enemy2)
+        icon_draw (self, self.icon)
     end
 end
 
@@ -91,6 +93,8 @@ function Seeker:__init()
     self.velocity.speed = 100
     self.velocity.angle = angle_between (self, player)
     self.accel = 500
+
+    self.icon = icons.seeker["green"]
 
     self.update = function (self, dt)
         self.angle = angle_between (self, player)
@@ -104,7 +108,7 @@ function Seeker:__init()
     end
 
     self.draw = function (self)
-        icon_draw (self, icons.enemy1)
+        icon_draw (self, self.icon)
     end
 end
 
@@ -113,6 +117,7 @@ CannonDrone.__name = "CannonDrone"
 function CannonDrone:__init()
     CannonDrone.super.__init(self)
 
+    self.icon = icons.drone["orange"]
     self.weapons[EnemyCannon (self)] = true
 end
 
@@ -121,6 +126,7 @@ MissileDrone.__name = "MissileDrone"
 function MissileDrone:__init()
     MissileDrone.super.__init(self)
 
+    self.icon = icons.drone["red"]
     self.weapons[EnemyMissile (self)] = true
 end
 
@@ -129,6 +135,7 @@ CannonSeeker.__name = "CannonSeeker"
 function CannonSeeker:__init()
     CannonSeeker.super.__init(self)
 
+    self.icon = icons.seeker["orange"]
     self.weapons[EnemyCannon (self)] = true
 end
 
@@ -137,6 +144,7 @@ MissileSeeker.__name = "MissileSeeker"
 function MissileSeeker:__init()
     MissileSeeker.super.__init(self)
 
+    self.icon = icons.seeker["red"]
     self.weapons[EnemyMissile (self)] = true
 end
 
