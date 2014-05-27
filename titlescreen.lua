@@ -88,8 +88,6 @@ local function select_menu_item (idx)
     if (idx == 1) then
         game_level_index = selected_level_index
         start_level ()
-    elseif (idx == 2) then
-        change_level (1)
     end
 end
 
