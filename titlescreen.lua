@@ -73,14 +73,22 @@ local function draw_controls ()
 end
 
 
-local function change_level (dir)
-    selected_level_index = selected_level_index + dir
+function set_level (level)
+    selected_level_index = level
     if selected_level_index < 1 then
         selected_level_index = 1
     elseif selected_level_index > #game_levels then
         selected_level_index = #game_levels
     end
     menu_text[2] = game_levels[selected_level_index].name
+end
+
+
+local function change_level (dir)
+    local next_idx
+
+    next_idx = selected_level_index + dir
+    set_level (next_idx)
 end
 
 

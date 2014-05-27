@@ -24,11 +24,13 @@ end
 
 
 local function set_gameover ()
+    set_level (game_level_index)
     transition_start ("Game Over", 3, return_to_title)
 end
 
 
 local function set_win ()
+    set_level (1)
     transition_start ("You Win!", 5, return_to_title)
 end
 
