@@ -145,9 +145,11 @@ function check_collisions ()
         local targets = get_targets (shot)
         for target in pairs(targets) do
             if (collide (shot, target)) then
-                target:hit_with (shot)
-                shot:hit ()
-                break
+                if not target:is(Player) or not player.dead then
+                    target:hit_with (shot)
+                    shot:hit ()
+                    break
+                end
             end
         end
         if not shots[shot] then

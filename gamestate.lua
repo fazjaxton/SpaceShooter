@@ -140,7 +140,7 @@ end
 
 -- Playing Game functions --
 local function playing_key (key)
-    if (key == " ") then
+    if (key == " " and not player.dead) then
         for weapon in pairs (player.weapons) do
             weapon.fire ()
         end
