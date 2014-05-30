@@ -105,6 +105,38 @@ local powerup_generator = {
     Missile = MissilePowerup,
 }
 
+local powerup_array = {
+    FastFirePowerup,
+    ExtraLifePowerup,
+    ShieldPowerup,
+    MissilePowerup,
+}
+
+
+function powerup_drop_random (carrier)
+    local rand = math.random ()
+    local which = math.ceil (rand * #powerup_array)
+
+    local powerup = powerup_array[which]()
+
+    powerup:drop_from (carrier)
+    powerups[powerup] = true
+end
+
+function powerup_roulette (increment)
+    local rand = math.random ()
+    local drop = false
+    game.powerup_chance = game.powerup_chance + increment
+
+    if (rand < game.powerup_chance) then
+        game.powerup_chance = 0
+        drop = true
+    end
+
+    return drop
+end
+
+
 function generate_powerup (type)
     return powerup_generator[type] ()
 end

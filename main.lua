@@ -336,6 +336,8 @@ function love.load ()
 
     game = {}
     game.state = get_game_states ()
+    game.powerup_chance = 0
+    game.powerup_chance_inc = 0.05
 
     icons = {}
     icons.player = icon_load ("Assets/player.png")

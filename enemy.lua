@@ -37,14 +37,14 @@ function Enemy:__init()
     self.fire_multiplier = 1
 
     self.destroyed = function (self)
-        if (self.powerup) then
-            self.powerup:drop_from (self)
-        end
-
         make_explosion (self.x, self.y, self.rad)
 
         enemies[self] = nil
         enemy_count = enemy_count -1
+
+        if powerup_roulette (game.powerup_chance_inc) then
+            powerup_drop_random (self)
+        end
     end
 
     self.hit_with = function (self, object)
