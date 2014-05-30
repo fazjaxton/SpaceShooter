@@ -49,10 +49,10 @@ function FastFirePowerup:__init()
     FastFirePowerup.super.__init(self)
     self.type = "persistent"
 
-    self.icon = icons.powerups["green"]
+    self.icon = icons.powerups["orange"]
 
     self.apply = function (self, player)
-        player.fire_multiplier = player.fire_multiplier * 2
+        player.fire_multiplier = player.fire_multiplier * 1.5
     end
 end
 
@@ -62,16 +62,47 @@ function ExtraLifePowerup:__init()
     ExtraLifePowerup.super.__init(self)
     self.type = "instantaneous"
 
-    self.icon = icons.powerups["red"]
+    self.icon = icons.powerups["green"]
 
     self.apply = function (self, player)
         player.lives = player.lives + 1
     end
 end
 
+ShieldPowerup = Powerup:extends()
+ShieldPowerup.__name = "ShieldPowerup"
+function ShieldPowerup:__init()
+    ShieldPowerup.super.__init(self)
+    self.type = "persistent"
+
+    self.icon = icons.powerups["blue"]
+
+    self.apply = function (self, player)
+        player.shield_count = player.shield_count + 1
+    end
+end
+
+MissilePowerup = Powerup:extends()
+MissilePowerup.__name = "MissilePowerup"
+function MissilePowerup:__init()
+    MissilePowerup.super.__init(self)
+    self.type = "persistent"
+
+    self.icon = icons.powerups["red"]
+
+    self.apply = function (self, player)
+        local pos = 0.78
+        player.weapons[PlayerMissile (player, -pos, 0)] = true
+        player.weapons[PlayerMissile (player, pos, 0)] = true
+    end
+end
+
+
 local powerup_generator = {
     FastFire = FastFirePowerup,
     ExtraLife = ExtraLifePowerup,
+    Shield = ShieldPowerup,
+    Missile = MissilePowerup,
 }
 
 function generate_powerup (type)

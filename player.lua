@@ -22,6 +22,8 @@ function Player:__init()
         -- Radians per second per second
         self.spin_accel = 25
 
+        self.shield_count = 0
+
         self.weapons = {}
         self.weapons[PlayerCannon (self, 0, 0)] = true
 
@@ -52,6 +54,11 @@ function Player:__init()
 
     self.draw = function (self)
         if not self.dead then
+            love.graphics.setColor (0, 0, 255, 255)
+            for i = 1,self.shield_count do
+                local rad = self.rad + i
+                love.graphics.circle ("line", self.x, self.y, rad)
+            end
             icon_draw (self, icons.player)
         end
     end
