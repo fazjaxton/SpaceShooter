@@ -38,13 +38,7 @@ function Enemy:__init()
 
     self.destroyed = function (self)
         if (self.powerup) then
-            self.powerup.x = self.x
-            self.powerup.y = self.y
-            self.powerup.velocity = {}
-            self.powerup.velocity.speed = self.velocity.speed
-            self.powerup.velocity.angle = self.velocity.angle
-            powerups[self.powerup] = true
-            powerup_count = powerup_count + 1
+            self.powerup:drop_from (self)
         end
 
         make_explosion (self.x, self.y, self.rad)

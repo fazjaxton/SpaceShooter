@@ -19,6 +19,16 @@ function Powerup:__init()
         powerup_count = powerup_count - 1
     end
 
+    self.drop_from = function (self, carrier)
+        self.x = carrier.x
+        self.y = carrier.y
+        self.velocity = {}
+        self.velocity.speed = carrier.velocity.speed
+        self.velocity.angle = carrier.velocity.angle
+        powerups[self] = true
+        powerup_count = powerup_count + 1
+    end
+
     self.update = function (self, dt)
         if (self.max_dist and self.dist > self.max_dist) then
             self:destroy ()
