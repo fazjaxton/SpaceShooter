@@ -20,7 +20,10 @@ function release_enemy (self, game_time)
 end
 
 
-function Level:__init()
+function Level:__init(order, timing)
+    self.enemy_order = order
+    self.enemy_timing = timing
+
     self.start = function ()
         self.enemy_index = 1
         self.last_enemy_time = game_time
@@ -54,36 +57,103 @@ function Level:__init()
 end
 
 
-Level1 = Level:extends ()
-Level1.__name = "Level1"
-function Level1:__init()
-    Level1.super.__init(self)
+--Level1 = Level:extends ()
+--Level1.__name = "Level1"
+--function Level1:__init()
+    --Level1.super.__init(self)
 
-    self.name = "Level 1"
-    self.enemy_order = { { type = "missiledrone", powerup = "FastFire" },
-                         { type = "missiledrone", powerup = "FastFire" }
-                       }
-    self.enemy_timing = 1
-end
 
-Level2 = Level:extends ()
-Level2.__name = "Level2"
-function Level2:__init()
-    Level2.super.__init(self)
-
-    self.name = "Level 2"
-    self.enemy_order = { { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" },
-                         { type = "missiledrone" }
-                       }
-    self.enemy_timing = 0.25
-end
-
-game_levels = { Level1 (), Level2 ()}
+game_levels = {
+    Level ( {
+        { type = "drone", powerup = "Missile" },
+        { type = "drone", powerup = "Shield" },
+        { type = "drone", powerup = "Shield" },
+        { type = "drone", powerup = "Shield" },
+        { type = "drone", powerup = "Shield" },
+        },
+        3
+    ),
+    Level ( {
+        { type = "seeker" },
+        { type = "seeker" },
+        { type = "seeker" },
+        { type = "seeker" },
+        { type = "seeker" },
+        },
+        3
+    ),
+    Level ( {
+        { type = "missiledrone" },
+        { type = "seeker" },
+        { type = "missiledrone" },
+        { type = "seeker" },
+        { type = "missiledrone" },
+        },
+        3
+    ),
+    Level ( {
+        { type = "missileseeker" },
+        { type = "missileseeker" },
+        { type = "missileseeker" },
+        { type = "missileseeker" },
+        { type = "missileseeker" },
+        },
+        3
+    ),
+    Level ( {
+        { type = "drone" },
+        { type = "drone" },
+        { type = "drone" },
+        { type = "drone" },
+        { type = "seeker"},
+        { type = "drone" },
+        { type = "drone" },
+        { type = "drone" },
+        { type = "drone" },
+        { type = "seeker", powerup = "ExtraLife" },
+        },
+        1
+    ),
+    Level ( {
+        { type = "cannondrone" },
+        { type = "seeker" },
+        { type = "cannondrone" },
+        { type = "seeker" },
+        { type = "cannondrone", powerup = "FastFire" },
+        },
+        3
+    ),
+    Level ( {
+        { type = "cannondrone" },
+        { type = "cannondrone" },
+        { type = "cannondrone" },
+        { type = "cannondrone" },
+        { type = "cannondrone" },
+        },
+        3
+    ),
+    Level ( {
+        { type = "cannondrone" },
+        { type = "cannonseeker" },
+        { type = "cannondrone" },
+        { type = "cannonseeker" },
+        { type = "cannondrone" },
+        { type = "cannonseeker" },
+        },
+        2
+    ),
+    Level ( {
+        { type = "cannondrone" },
+        { type = "missiledrone" },
+        { type = "cannondrone" },
+        { type = "missiledrone" },
+        { type = "cannondrone" },
+        { type = "missiledrone" },
+        { type = "cannondrone" },
+        { type = "missiledrone" },
+        { type = "cannondrone" },
+        { type = "missiledrone" },
+        },
+        1
+    ),
+}

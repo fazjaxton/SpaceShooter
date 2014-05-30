@@ -47,7 +47,7 @@ end
 
 -- Start Screen functions --
 local function start_level_transition ()
-    transition_start (level.name, 3, set_playing, draw_player_lives)
+    transition_start ("Level " .. game_level_index, 3, set_playing, draw_player_lives)
 end
 
 

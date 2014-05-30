@@ -1,7 +1,7 @@
 require 'level'
 
 local selected = 1
-local menu_text = { "Start", game_levels[1].name}
+local menu_text = { "Start", "Level 1"}
 
 
 local function draw_title ()
@@ -80,7 +80,7 @@ function set_level (level)
     elseif selected_level_index > #game_levels then
         selected_level_index = #game_levels
     end
-    menu_text[2] = game_levels[selected_level_index].name
+    menu_text[2] = "Level " .. selected_level_index
 end
 
 
