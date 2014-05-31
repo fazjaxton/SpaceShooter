@@ -197,7 +197,7 @@ function Weapon:__init(owner, rate)
     self.mount_pos = 0
 
     self.fire = function ()
-        local rate = self.fire_rate * owner.fire_multiplier
+        local rate = self.fire_rate * self.get_multiplier ()
 
         -- Don't fire faster than max rate
         if (game_time < self.next_fire) then
@@ -215,12 +215,20 @@ Cannon = Weapon:extends ()
 Cannon.__name = "Cannon"
 function Cannon:__init(owner, rate)
     Cannon.super.__init(self, owner, rate)
+
+    self.get_multiplier = function (self)
+        return owner.cannon_fire_mult
+    end
 end
 
 Missile = Weapon:extends ()
 Missile.__name = "Missile"
 function Missile:__init(owner, rate)
     Missile.super.__init(self, owner, rate)
+
+    self.get_multiplier = function (self)
+        return owner.missile_fire_mult
+    end
 end
 
 PlayerCannon = Cannon:extends ()

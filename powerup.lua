@@ -52,7 +52,7 @@ function FastFirePowerup:__init()
     self.icon = icons.powerups["orange"]
 
     self.apply = function (self, player)
-        player.fire_multiplier = player.fire_multiplier * 1.5
+        player.cannon_fire_mult = player.cannon_fire_mult * 1.5
     end
 end
 
@@ -92,8 +92,23 @@ function MissilePowerup:__init()
 
     self.apply = function (self, player)
         local pos = 0.78
-        player.weapons[PlayerMissile (player, -pos, 0)] = true
-        player.weapons[PlayerMissile (player, pos, 0)] = true
+        local has_missile = false
+
+        for w in pairs (player.weapons) do
+            if w:is(Missile) then
+                has_missile = true
+                break
+            end
+        end
+
+        -- If player doesn't have missiles already, this adds missiles.
+        -- Otherwise it increases the missile fire rate.
+        if has_missile then
+            player.missile_fire_mult = player.missile_fire_mult * 1.5
+        else
+            player.weapons[PlayerMissile (player, -pos, 0)] = true
+            player.weapons[PlayerMissile (player, pos, 0)] = true
+        end
     end
 end
 

@@ -27,7 +27,8 @@ function Player:__init()
         self.weapons = {}
         self.weapons[PlayerCannon (self, 0, 0)] = true
 
-        self.fire_multiplier = 1
+        self.cannon_fire_mult = 1
+        self.missile_fire_mult = 1
     end
 
     self:set_start_pos ()

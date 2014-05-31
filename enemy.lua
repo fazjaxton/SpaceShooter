@@ -34,7 +34,8 @@ function Enemy:__init()
 
     self.weapons = {}
 
-    self.fire_multiplier = 1
+    self.cannon_fire_mult = 1
+    self.missile_fire_mult = 1
 
     self.destroyed = function (self)
         make_explosion (self.x, self.y, self.rad)
