@@ -99,11 +99,11 @@ function MissileShot:__init (weapon)
 
     self.destroy = function (self, dt)
         shots[self] = nil
+        make_explosion (self.x, self.y, self.rad)
     end
 
     self.hit_with = function (self, object)
-        shots[self] = nil
-        make_explosion (self.x, self.y, self.rad)
+        self:destroy ()
     end
 
     self.update = function (self, dt)
