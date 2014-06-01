@@ -243,7 +243,7 @@ end
 PlayerMissile = Missile:extends ()
 PlayerMissile.__name = "PlayerMissile"
 function PlayerMissile:__init(owner, pos, angle)
-    PlayerMissile.super.__init(self, owner, 0.75)
+    PlayerMissile.super.__init(self, owner, 0.25)
     self.shoot = PlayerMissileShot
     self.angle = angle
     self.mount_pos = pos
