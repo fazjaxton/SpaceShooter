@@ -19,7 +19,7 @@ end
 
 
 local function return_to_title ()
-    setup_game ()
+    set_state ("start")
 end
 
 
@@ -189,6 +189,7 @@ local function playing_update (game_time, dt)
         if player.lives == 0 then
             set_gameover ()
         else
+            player:reset ()
             start_level ()
         end
     elseif level:complete () then
@@ -247,6 +248,7 @@ local function draw_status ()
     status_font = font["med"]
 
     powerup_text = "Powerups: "
+    shield_text = "Shields: "
     lives_text = "Lives: " .. player.lives
     y = win_height - border
     x = border
@@ -263,7 +265,18 @@ local function draw_status ()
     end
 
     x = win_width / 2
-    draw_text (lives_text, x, y, status_font, "bottom", "left")
+    w,h = draw_text (shield_text, x, y, status_font, "bottom", "left")
+    x = x + w
+
+    local shield_temp = ShieldPowerup ()
+    for n = 1,player.shield_count do
+        powerup_y = y - (h + shield_temp.icon.h) / 2
+        love.graphics.draw (shield_temp.icon.img, x, powerup_y, 0)
+        x = x + shield_temp.icon.w + powerup_spacing
+    end
+
+    x = win_width - border
+    draw_text (lives_text, x, y, status_font, "bottom", "right")
 end
 
 

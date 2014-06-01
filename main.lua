@@ -263,8 +263,6 @@ end
 
 
 function setup_game ()
-    set_state ("start")
-
     player = Player ()
     enemies = {}
     shots = {}
@@ -331,13 +329,29 @@ function draw_text (text, x, y, font, yalign, xalign)
 end
 
 
+function get_powerup_chance_increment ()
+    return game.difficulties[game.difficulty_idx].pci
+end
+
+
+function get_starting_shield_count ()
+    return game.difficulties[game.difficulty_idx].shields
+end
+
+
 function love.load ()
     math.randomseed (os.time())
 
     game = {}
     game.state = get_game_states ()
     game.powerup_chance = 0
-    game.powerup_chance_inc = 0.05
+
+    game.difficulty_idx = 1
+    game.difficulties = {
+        { name = "Easy",   pci = 0.05, shields = 2 },
+        { name = "Normal", pci = 0.01, shields = 1 },
+        { name = "Hard",   pci = 0.00, shields = 0 }
+    }
 
     icons = {}
     icons.player = icon_load ("Assets/player.png")
@@ -405,7 +419,7 @@ function love.load ()
 
     shot_range = win_height
 
-    setup_game ()
+    set_state ("start")
     selected_level_index = 1
 
     stars = {}

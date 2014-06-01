@@ -138,10 +138,11 @@ function powerup_drop_random (carrier)
     powerups[powerup] = true
 end
 
+
 function powerup_roulette (increment)
     local rand = math.random ()
     local drop = false
-    game.powerup_chance = game.powerup_chance + increment
+    game.powerup_chance = game.powerup_chance + get_powerup_chance_increment ()
 
     if (rand < game.powerup_chance) then
         game.powerup_chance = 0

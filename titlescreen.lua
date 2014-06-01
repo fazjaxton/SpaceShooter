@@ -1,7 +1,7 @@
 require 'level'
 
 local selected = 1
-local menu_text = { "Start", "Level 1"}
+local menu_text = { "Start", "Level: 1", "Difficulty: Easy"}
 
 
 local function draw_title ()
@@ -80,7 +80,7 @@ function set_level (level)
     elseif selected_level_index > #game_levels then
         selected_level_index = #game_levels
     end
-    menu_text[2] = "Level " .. selected_level_index
+    menu_text[2] = "Level: " .. selected_level_index
 end
 
 
@@ -95,7 +95,39 @@ end
 local function select_menu_item (idx)
     if (idx == 1) then
         game_level_index = selected_level_index
+        setup_game ()
         start_level ()
+    end
+end
+
+
+local function increase_difficulty (inc)
+    game.difficulty_idx = game.difficulty_idx + inc
+
+    if (game.difficulty_idx > #game.difficulties) then
+        game.difficulty_idx = #game.difficulties
+    elseif (game.difficulty_idx < 1) then
+        game.difficulty_idx = 1
+    end
+
+    menu_text[3] = "Difficulty: " .. game.difficulties[game.difficulty_idx].name
+end
+
+
+local function inc_menu_item (idx)
+    if (idx == 2) then
+        change_level (1)
+    elseif (idx == 3) then
+        increase_difficulty (1)
+    end
+end
+
+
+local function dec_menu_item (idx)
+    if (idx == 2) then
+        change_level (-1)
+    elseif (idx == 3) then
+        increase_difficulty (-1)
     end
 end
 
@@ -112,10 +144,10 @@ function start_screen_key (key)
         selected = selected + 1
     elseif (key == "up") then
         selected = selected - 1
-    elseif (key == "left" and selected == 2) then
-        change_level (-1)
-    elseif (key == "right" and selected == 2) then
-        change_level (1)
+    elseif (key == "left") then
+        dec_menu_item (selected)
+    elseif (key == "right") then
+        inc_menu_item (selected)
     elseif (key == " ") then
         select_menu_item (selected)
     end

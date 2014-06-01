@@ -22,7 +22,7 @@ function Player:__init()
         -- Radians per second per second
         self.spin_accel = 25
 
-        self.shield_count = 0
+        self.shield_count = get_starting_shield_count ()
 
         self.weapons = {}
         self.weapons[PlayerCannon (self, 0, 0)] = true
@@ -31,10 +31,15 @@ function Player:__init()
         self.missile_fire_mult = 1
     end
 
-    self:set_start_pos ()
-    self:set_defaults ()
+    self.reset = function (self)
+        self:set_start_pos ()
+        self:set_defaults ()
 
-    self.powerups = {}
+        self.powerups = {}
+        self.powerup_count = 0
+    end
+
+    self:reset ()
 
     self.rad = 25
 
@@ -44,8 +49,6 @@ function Player:__init()
     self.bounds.rad = self.rad
 
     self.lives = 3
-
-    self.powerup_count = 0
 
     self.update = function (self, dt)
         update_pos (self, dt)
@@ -65,12 +68,16 @@ function Player:__init()
     end
 
     self.add_powerup = function (self, powerup)
-        if powerup.type == "persistent" then
-            self.powerups[powerup] = true
-            self.powerup_count = self.powerup_count + 1
+        if (powerup:is(ShieldPowerup)) then
+            self.shield_count = self.shield_count + 1
+        else
+            if powerup.type == "persistent" then
+                self.powerups[powerup] = true
+                self.powerup_count = self.powerup_count + 1
+            end
+            powerup:apply (self)
+            print ("Powerup added")
         end
-        powerup:apply (self)
-        print ("Powerup added")
     end
 
     self.remove_powerup = function (self, powerup)
@@ -93,15 +100,8 @@ function Player:__init()
         if (object:is (Shot) or object:is (Enemy)) then
             local count = 0
 
-            if (self.powerup_count > 0) then
-                local which = math.floor (math.random () * self.powerup_count)
-                for powerup in pairs(self.powerups) do
-                    if (count == which) then
-                        self:remove_powerup (powerup)
-                        break
-                    end
-                    count = count + 1
-                end
+            if (self.shield_count > 0) then
+                self.shield_count = self.shield_count - 1
             else
                 make_explosion (self.x, self.y, self.rad)
                 self.dead = true
