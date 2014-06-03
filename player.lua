@@ -76,7 +76,6 @@ function Player:__init()
                 self.powerups[self.powerup_count] = powerup
             end
             powerup:apply (self)
-            print ("Powerup added")
         end
     end
 
