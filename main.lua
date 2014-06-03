@@ -405,10 +405,10 @@ function love.load ()
     end
 
     font = {}
-    font["small"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 26);
-    font["med"]   = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 32);
-    font["large"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 45);
-    font["title"] = love.graphics.newFont ("Assets/ROBOTECH GP.ttf", 80);
+    font["small"] = love.graphics.newFont ("Assets/ROBOTECH_GP.ttf", 26);
+    font["med"]   = love.graphics.newFont ("Assets/ROBOTECH_GP.ttf", 32);
+    font["large"] = love.graphics.newFont ("Assets/ROBOTECH_GP.ttf", 45);
+    font["title"] = love.graphics.newFont ("Assets/ROBOTECH_GP.ttf", 80);
     font["option"] = font["large"]
 
     menu_music = love.audio.newSource ("Assets/Space_Idea.mp3")
