@@ -1,7 +1,7 @@
 require 'level'
 
 local selected = 1
-local menu_text = { "Start", "Level: 1", "Difficulty: Easy"}
+local menu_text = { "Start", "Level: 1", "Difficulty: Easy", "Quit"}
 
 
 local function draw_title ()
@@ -37,7 +37,7 @@ local function draw_menu ()
         x = win_width / 2
 
         w,h = draw_text (text, x, y, font, "top", "center")
-        y = y + h * 1.5
+        y = y + h * 1.3
     end
 end
 
@@ -53,7 +53,7 @@ local function draw_controls ()
     local control_font = font["small"]
     local separator = " - "
     local half_sep_width = control_font:getWidth (separator) / 2
-    local y = win_height / 2 + 100
+    local y = win_height / 2 + 120
 
     for i,control in ipairs (controls) do
         local x = win_width / 2
@@ -97,6 +97,8 @@ local function select_menu_item (idx)
         game_level_index = selected_level_index
         setup_game ()
         start_level ()
+    elseif (idx == 4) then
+        os.exit ()
     end
 end
 
