@@ -72,27 +72,11 @@ function Player:__init()
             self.shield_count = self.shield_count + 1
         else
             if powerup.type == "persistent" then
-                self.powerups[powerup] = true
                 self.powerup_count = self.powerup_count + 1
+                self.powerups[self.powerup_count] = powerup
             end
             powerup:apply (self)
             print ("Powerup added")
-        end
-    end
-
-    self.remove_powerup = function (self, powerup)
-        -- Remove powerup from ship
-        self.powerups[powerup] = nil
-        self.powerup_count = self.powerup_count - 1
-
-        -- Restore ship to defaults
-        self:set_defaults ()
-
-        print ("Powerup removed")
-
-        -- Apply all remaining powerups
-        for p in pairs (self.powerups) do
-            p:apply (self)
         end
     end
 
