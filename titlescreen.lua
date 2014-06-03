@@ -155,9 +155,9 @@ function start_screen_key (key)
     end
 
     if (selected > #menu_text) then
-        selected = 1
-    elseif (selected < 1) then
         selected = #menu_text
+    elseif (selected < 1) then
+        selected = 1
     end
 end
 
