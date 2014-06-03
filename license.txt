@@ -10,7 +10,7 @@ GPL v3 - http://www.gnu.org/copyleft/gpl.html
 30log Lua module
 Yonaba
 http://yonaba.github.io/30log/
-http://www.opensource.org/licenses/mit-license.php
+MIT - http://www.opensource.org/licenses/mit-license.php
 
 Player Sprite
 DK!
