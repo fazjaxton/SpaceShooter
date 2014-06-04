@@ -58,7 +58,6 @@ end
 
 
 local function draw_controls ()
-    local text
     local controls = { {"Up / W", "Forward Thrust" },
                        {"Down / S", "Reverse Thrust" },
                        {"Left / A", "Spin Left" },
