@@ -88,6 +88,20 @@ local function draw_controls ()
 end
 
 
+local function draw_version ()
+    local version_font = font["small"]
+    local x, y
+    local border = 10
+    local version = "Version " .. game.version
+
+    x = win_width - border
+    y = win_height - border
+
+    draw_text (version, x, y, version_font, "bottom", "right")
+end
+
+
+
 function set_level (level)
     selected_level_index = level
     if selected_level_index < 1 then
@@ -153,6 +167,7 @@ function start_screen_draw (game_time, dt)
     draw_title ()
     draw_menu ()
     draw_controls ()
+    draw_version ()
 end
 
 
