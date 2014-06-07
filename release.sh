@@ -31,32 +31,57 @@ game_name_ver=${game_name}-v${version}
 game_bundle=${release_dir}/${game_name_ver}.love
 zip ${game_bundle} ${zipfiles} > /dev/null
 
-cp $(git ls-files README* *.txt) ${release_dir}
+info_files=$(git ls-files README* *.txt)
+
+# Build Linux release
+linux_dir=${game_name_ver}-linux
+linux_path=${release_dir}/${linux_dir}
+
+mkdir ${linux_path}
+cp ${info_files} ${linux_path}
+cp ${game_bundle} ${linux_path}
+pushd ${release_dir} > /dev/null
+zip -r ${linux_dir}.zip ${linux_dir} > /dev/null
+popd > /dev/null
 
 # Build win32 release
-win32_path=${release_dir}/win32
+win32_dir=${game_name_ver}-win32
+win32_path=${release_dir}/${win32_dir}
 win32_bundle=${distrib_dir}/${love_name}-${win32_name}.zip
 
 mkdir ${win32_path}
-unzip -j -d ${win32_path} ${win32_bundle} "*.dll" "*/license.txt" > /dev/null
+cp ${info_files} ${win32_path}
+unzip -j -d ${win32_path} ${win32_bundle} "*.dll"  > /dev/null
+unzip -p ${win32_bundle} "*/license.txt" > ${win32_path}/license-love.txt
 unzip -p ${win32_bundle} "*/love.exe" | cat - ${game_bundle} > \
-                    ${win32_path}/${game_name_ver}.exe
+                    ${win32_path}/${game_name_ver}-win32.exe
+pushd ${release_dir} > /dev/null
+zip -r ${win32_dir}.zip ${win32_dir} > /dev/null
+popd > /dev/null
 
 # Build win64 release
-win64_path=${release_dir}/win64
+win64_dir=${game_name_ver}-win64
+win64_path=${release_dir}/${win64_dir}
 win64_bundle=${distrib_dir}/${love_name}-${win64_name}.zip
 
 mkdir ${win64_path}
-unzip -j -d ${win64_path} ${win64_bundle} "*.dll" "*/license.txt" > /dev/null
+cp ${info_files} ${win64_path}
+unzip -j -d ${win64_path} ${win64_bundle} "*.dll" > /dev/null
+unzip -p ${win64_bundle} "*/license.txt" > ${win64_path}/license-love.txt
 unzip -p ${win64_bundle} "*/love.exe" | cat - ${game_bundle} > \
-                    ${win64_path}/${game_name_ver}.exe
+                    ${win64_path}/${game_name_ver}-win64.exe
+pushd ${release_dir} > /dev/null
+zip -r ${win64_dir}.zip ${win64_dir} > /dev/null
+popd > /dev/null
 
 # Build mac release
-mac_path=${release_dir}/mac
+mac_dir=${game_name_ver}-mac
+mac_path=${release_dir}/${mac_dir}
 mac_bundle=${distrib_dir}/${love_name}-${mac_name}.zip
 mac_app_dir=${mac_path}/${game_name_ver}.app
 
 mkdir ${mac_path}
+cp ${info_files} ${mac_path}
 unzip -d ${mac_path} ${mac_bundle} "love.app/*" > /dev/null
 mv ${mac_path}/love.app ${mac_app_dir}
 cp ${game_bundle} ${mac_app_dir}/Contents/Resources
@@ -68,5 +93,9 @@ sed -e "s#PUTGAMEURLHERE#${game_url}#" \
     -e "s/PUTGAMEVERSIONHERE/${version}/" \
       < CustomInfo.plist \
       > ${mac_app_dir}/Contents/Info.plist
+
+pushd ${release_dir} > /dev/null
+zip -r ${mac_dir}.zip ${mac_dir} > /dev/null
+popd > /dev/null
 
 popd > /dev/null
