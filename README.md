@@ -27,5 +27,7 @@ Your Rights
 ===========
 
 All assets in the game including the game code are free as in freedom, with the
-exception of the song played while playing, which is non-commercial.  Please
-see the license.txt file for details.
+exception of the "Space Circuit" song, which is non-commercial.  You are free
+to use, change, and redistribute the software and assets for any purpose.
+(However, you may not charge money for the song "Space Circuit".)  See the
+license.txt file for details.
