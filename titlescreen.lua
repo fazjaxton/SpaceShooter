@@ -193,7 +193,7 @@ function start_screen_key (key)
         dec_menu_item (selected)
     elseif (key == "right") then
         inc_menu_item (selected)
-    elseif (key == " ") then
+    elseif (key == " " or key == "return") then
         select_menu_item (selected)
     end
 
