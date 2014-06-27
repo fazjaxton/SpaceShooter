@@ -14,6 +14,7 @@
 -- along with SpaceShooter.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'titlescreen'
+require 'settings'
 
 GameState = class ()
 GameState.__name = "GameState"
@@ -155,7 +156,9 @@ end
 
 -- Playing Game functions --
 local function playing_key (key)
-    if (key == " " and not player.dead) then
+    action = get_key_action (key)
+
+    if (action == "fire" and not player.dead) then
         for weapon in pairs (player.weapons) do
             weapon.fire ()
         end
@@ -166,22 +169,22 @@ end
 
 
 local function handle_inputs (dt)
-    if (love.keyboard.isDown ("a") or love.keyboard.isDown ("left")) then
+    if love.keyboard.isDown (settings.controls.left) then
         player:spin (-1, dt)
-    elseif (love.keyboard.isDown ("d") or love.keyboard.isDown ("right")) then
+    elseif love.keyboard.isDown (settings.controls.right) then
         player:spin (1, dt)
     else
         player.spin_rps = 0
     end
 
-    if (love.keyboard.isDown ("s") or love.keyboard.isDown ("down")) then
+    if love.keyboard.isDown (settings.controls.down) then
         player:accelerate (-dt)
-    elseif (love.keyboard.isDown ("w") or love.keyboard.isDown ("up")) then
+    elseif love.keyboard.isDown (settings.controls.up) then
         player:accelerate (dt)
     end
 
-    if (love.keyboard.isDown (" ")) then
-        playing_key (" ")
+    if love.keyboard.isDown (settings.controls.fire) then
+        playing_key (settings.controls.fire)
     end
 end
 
@@ -307,14 +310,16 @@ end
 
 
 local function start_screen_activate ()
-    -- Pause all other audio
-    love.audio.pause ()
+    if not menu_music:isPlaying () then
+        -- Pause all other audio
+        love.audio.pause ()
 
-    menu_music:rewind ()
-    menu_music:play ()
+        menu_music:rewind ()
+        menu_music:play ()
 
-    -- Rewind game music so it starts over each game
-    game_music:rewind ()
+        -- Rewind game music so it starts over each game
+        game_music:rewind ()
+    end
 end
 
 
@@ -331,6 +336,10 @@ function get_game_states ()
                                      start_screen_draw,
                                      start_screen_key,
                                      start_screen_activate)
+    states["settings"]  = GameState (nil,
+                                     settings_draw,
+                                     settings_key,
+                                     settings_activate)
     states["playing"]   = GameState (playing_update,
                                      playing_draw,
                                      playing_key)

@@ -400,6 +400,28 @@ function get_starting_shield_count ()
 end
 
 
+function get_key_action (key)
+    local action = nil
+    for control,control_key in pairs(settings.controls) do
+        if key == control_key then
+            action = control
+            break
+        end
+    end
+
+    return action
+end
+
+
+function get_key_name (key)
+    if key == " " then
+        return "space"
+    end
+
+    return key
+end
+
+
 function love.load ()
     math.randomseed (os.time())
 
@@ -422,6 +444,17 @@ function love.load ()
     settings.muted = false
 
     settings.space_friction = 0.0
+    settings.space_friction_max = 1.0
+    settings.space_friction_min = 0.0
+    settings.space_friction_step = 0.1
+
+    settings.controls = {
+        up = "up",
+        down = "down",
+        left = "left",
+        right = "right",
+        fire = " ",
+    }
 
     -- Set the initial volume
     volume_update (0)

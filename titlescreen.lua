@@ -16,7 +16,7 @@
 require 'level'
 
 local selected = 1
-local menu_text = { "Start", "Level: 1", "Difficulty: Easy", "Quit"}
+local menu_text = { "Start", "Level: 1", "Difficulty: Easy", "Settings", "Quit"}
 
 
 local function draw_title ()
@@ -40,7 +40,7 @@ local function draw_menu ()
 
     love.graphics.setColor (255, 255, 255, 255)
 
-    y = 200
+    y = 180
 
     for i = 1,#menu_text do
         local text = menu_text[i]
@@ -81,12 +81,13 @@ end
 
 
 local function draw_game_controls ()
-    local controls = { {"Up / W", "Forward Thrust" },
-                       {"Down / S", "Reverse Thrust" },
-                       {"Left / A", "Spin Left" },
-                       {"Right / D", "Spin Right" },
-                       {"Space", "Shoot" },
-                     }
+    local controls = {
+        { get_key_name (settings.controls.up),    "Forward Thrust" },
+        { get_key_name (settings.controls.down),  "Reverse Thrust" },
+        { get_key_name (settings.controls.left),  "Spin Left"      },
+        { get_key_name (settings.controls.right), "Spin Right"     },
+        { get_key_name (settings.controls.fire),  "Shoot"          },
+    }
     draw_controls (win_width * 0.25, controls)
 end
 
@@ -139,6 +140,8 @@ local function select_menu_item (idx)
         setup_game ()
         start_level ()
     elseif (idx == 4) then
+        set_state ("settings")
+    elseif (idx == 5) then
         os.exit ()
     end
 end
@@ -185,15 +188,19 @@ end
 
 
 function start_screen_key (key)
-    if (key == "down") then
+    local action = get_key_action (key)
+
+    -- Always support up, down, left, right, enter on the settings screen.
+    -- Also support whatever control keys the player has bound.
+    if (key == "down" or action == "down") then
         selected = selected + 1
-    elseif (key == "up") then
+    elseif (key == "up" or action == "up") then
         selected = selected - 1
-    elseif (key == "left") then
+    elseif (key == "left" or action == "left") then
         dec_menu_item (selected)
-    elseif (key == "right") then
+    elseif (key == "right" or action == "right") then
         inc_menu_item (selected)
-    elseif (key == " " or key == "return") then
+    elseif (key == "return" or action == "fire") then
         select_menu_item (selected)
     end
 
