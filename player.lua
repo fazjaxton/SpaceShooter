@@ -66,6 +66,11 @@ function Player:__init()
     self.lives = 3
 
     self.update = function (self, dt)
+        local slowdown
+
+        slowdown = self.velocity.speed * dt * settings.space_friction
+        self.velocity.speed = self.velocity.speed - slowdown
+
         update_pos (self, dt)
         wrap_edges (self)
         check_limits (self)

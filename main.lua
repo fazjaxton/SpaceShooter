@@ -421,6 +421,8 @@ function love.load ()
     settings.volume_step = 0.1
     settings.muted = false
 
+    settings.space_friction = 0.0
+
     -- Set the initial volume
     volume_update (0)
 
