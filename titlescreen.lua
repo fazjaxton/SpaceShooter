@@ -57,20 +57,13 @@ local function draw_menu ()
 end
 
 
-local function draw_controls ()
-    local controls = { {"Up / W", "Forward Thrust" },
-                       {"Down / S", "Reverse Thrust" },
-                       {"Left / A", "Spin Left" },
-                       {"Right / D", "Spin Right" },
-                       {"Space", "Shoot" },
-                     }
+local function draw_controls (x, controls)
     local control_font = font["small"]
     local separator = " - "
     local half_sep_width = control_font:getWidth (separator) / 2
     local y = win_height / 2 + 120
 
     for i,control in ipairs (controls) do
-        local x = win_width / 2
         local w,h
         local line = control[1] .. separator .. control[2]
 
@@ -84,6 +77,26 @@ local function draw_controls ()
                    control_font, "top", "left")
         y = y + h * 1.2
     end
+end
+
+
+local function draw_game_controls ()
+    local controls = { {"Up / W", "Forward Thrust" },
+                       {"Down / S", "Reverse Thrust" },
+                       {"Left / A", "Spin Left" },
+                       {"Right / D", "Spin Right" },
+                       {"Space", "Shoot" },
+                     }
+    draw_controls (win_width * 0.25, controls)
+end
+
+
+local function draw_general_controls ()
+    local controls = { {"+", "Volume Up" },
+                       {"-", "Volume Down" },
+                       {"m", "Volume Mute" },
+                     }
+    draw_controls (win_width * 0.65, controls)
 end
 
 
@@ -165,7 +178,8 @@ end
 function start_screen_draw (game_time, dt)
     draw_title ()
     draw_menu ()
-    draw_controls ()
+    draw_game_controls ()
+    draw_general_controls ()
     draw_version ()
 end
 
