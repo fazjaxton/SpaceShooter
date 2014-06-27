@@ -99,8 +99,54 @@ function accelerate (self, dt)
 end
 
 
+local function volume_update (delta)
+    settings.volume = settings.volume + delta
+    if settings.volume < 0 then
+        settings.volume = 0
+    elseif settings.volume > 1 then
+        settings.volume = 1
+    end
+
+    if settings.muted then
+        love.audio.setVolume (0)
+    else
+        love.audio.setVolume (settings.volume)
+    end
+end
+
+
+local function volume_down ()
+    settings.muted = false
+    volume_update (-settings.volume_step)
+end
+
+
+local function volume_up ()
+    settings.muted = false
+    volume_update (settings.volume_step)
+end
+
+
+local function volume_toggle_mute ()
+    settings.muted = not settings.muted
+    volume_update (0)
+end
+
+
+local function handle_global_keys (key)
+    if key == "-" or key == "_" then
+        volume_down ()
+    elseif key == "+" or key == "=" then
+        volume_up ()
+    elseif key == "m" then
+        volume_toggle_mute ()
+    end
+end
+
+
 function love.keypressed (key)
-    if (key == "?") then
+    if handle_global_keys (key) then
+        return
     end
 
     if (game.state[current_state].keypressed) then
@@ -369,6 +415,14 @@ function love.load ()
         { name = "Normal", pci = 0.01, shields = 1 },
         { name = "Hard",   pci = 0.00, shields = 0 }
     }
+
+    settings = {}
+    settings.volume = 0.5
+    settings.volume_step = 0.1
+    settings.muted = false
+
+    -- Set the initial volume
+    volume_update (0)
 
     icons = {}
     icons.player = icon_load ("Assets/player.png")
