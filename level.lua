@@ -45,6 +45,7 @@ function Level:__init(order, timing)
         enemy_count = 0
         powerup_count = 0
         explosion_count = 0
+        self.complete_time = 0
 
         -- Clear any existing shots
         shots = {}
@@ -58,11 +59,23 @@ function Level:__init(order, timing)
 
     self.complete = function (self)
         -- All enemies have appeared and been destroyed
-        return (self.enemy_index > #self.enemy_order and
+        if (self.enemy_index > #self.enemy_order and
                 enemy_count == 0 and
                 powerup_count == 0 and
                 explosion_count == 0 and
-                not player.dead)
+                not player.dead) then
+            if self.complete_time > 0 then
+                if game_time - self.complete_time > 1.5 then
+                    return true
+                end
+            else
+                self.complete_time = game_time
+            end
+        else
+            self.complete_time = 0
+        end
+
+        return false
     end
 
     self.failed = function (self)
