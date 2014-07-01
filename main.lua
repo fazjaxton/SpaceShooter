@@ -429,7 +429,7 @@ function love.load ()
     game.state = get_game_states ()
     game.powerup_chance = 0
 
-    game.version = "1.00"
+    game.version = "1.10"
 
     game.difficulty_idx = 1
     game.difficulties = {
