@@ -14,6 +14,8 @@ lives.  You can collect powerups by colliding with them or by shooting them
 with the ship's main laser.  (Missiles do not collect powerups.)  Missiles can
 be destroyed with laser shots, but laser shots cannot be stopped.
 
+Download at http://fazjaxton.github.io/SpaceShooter/
+
 Playing
 =======
 
